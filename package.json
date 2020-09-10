@@ -1,0 +1,35 @@
+{
+  "name": "sample-lovevery-homework",
+  "version": "1.0.0",
+  "description": "A sample assignment for my Lovevery application",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/scottrippey/sample-Lovevery-homework.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/scottrippey/sample-Lovevery-homework/issues"
+  },
+  "homepage": "https://scottrippey.github.io/sample-Lovevery-homework",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "parcel src/index.html",
+    "build": "rm -rf docs && NODE_ENV=production parcel build src/index.html --no-minify --public-url ./ --out-dir docs",
+    "clean": "rm -rf docs .cache"
+  },
+  "devDependencies": {
+    "@svgr/parcel-plugin-svgr": "^5.4.0",
+    "classnames": "^2.2.6",
+    "parcel-bundler": "^1.12.4",
+    "postcss-nesting": "^7.0.1",
+    "tailwindcss": "^1.7.5",
+    "typescript": "^4.0.2"
+  },
+  "dependencies": {
+    "@types/react": "^16.9.48",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
+  }
+}
