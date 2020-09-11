@@ -1,9 +1,10 @@
 import React from 'react';
+import { MessagesList } from "~/components/MessagesList";
 
 export const Home: React.FC = () => {
     return <>
       <Content>
-        Hello! Welcome to this website!
+        <MessagesList />
       </Content>
     </>;
 };
