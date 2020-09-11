@@ -6,12 +6,14 @@ import { messagesClient } from "~/common/messagesClient";
 export const MessagesList = () => {
   const messages = useAsync(() => messagesClient.getAllMessages(), []);
 
+  const users = messages.result ? Object.keys(messages.result) : [ ];
 
   return (
     <div>
       { messages.loading && "Loading messages..."}
       { messages.error && `Failed to load messages!`}
-      { messages.result && Object.keys(messages.result).map((user) => {
+      { !messages.loading && users.length === 0 && "No messages to display" }
+      { users.map((user) => {
         const msgs = messages.result![user];
         return (
           <section key={user}>

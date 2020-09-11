@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "@svgr/parcel-plugin-svgr": "^5.4.0",
+    "@types/react-dom": "^16.9.8",
     "axios": "^0.20.0",
     "classnames": "^2.2.6",
     "parcel-bundler": "^1.12.4",

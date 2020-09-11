@@ -13,26 +13,28 @@ export const messagesClient = {
   async getAllMessages() {
     interface MessagesResponse {
       statusCode: number;
-      body: {
-        [user: string]: Message[];
-      };
+      body: string;
+    }
+    interface ResponseBody {
+      [user: string]: Message[];
     }
     const response = await messagesServer.get<MessagesResponse>('/messages');
 
-    const messagesByUser = response.data.body;
+    const messagesByUser: ResponseBody = JSON.parse(response.data.body);
     return messagesByUser;
   },
   async getUserMessages(user: string) {
     interface UserMessagesResponse {
       statusCode: number;
-      body: {
-        user: string;
-        message: Message[];
-      };
+      body: string;
+    }
+    interface ResponseBody {
+      user: string;
+      message: Message[];
     }
     const response = await messagesServer.get<UserMessagesResponse>(`/messages/${user}`);
 
-    const messages = response.data.body.message;
+    const messages = JSON.parse(response.data.body).message;
     return messages;
   },
   async addMessage(newMessage: Message & { user: string }) {
