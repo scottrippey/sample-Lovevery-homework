@@ -11,7 +11,7 @@ if (ENABLE_MOCK_ADAPTER) {
 
 function enableMockAdapter() {
   // This sets the mock adapter on the default instance
-  var mock = new MockAdapter(axios);
+  var mock = new MockAdapter(axios, { delayResponse: 1000 });
 
   const mockMessagesByUser: { [user: string]: Message[] } = {
     "scott": [

@@ -20,6 +20,7 @@
     "clean": "rm -rf docs .cache"
   },
   "devDependencies": {
+    "@material-ui/core": "^4.11.0",
     "@svgr/parcel-plugin-svgr": "^5.4.0",
     "@types/react-dom": "^16.9.8",
     "axios": "^0.20.0",
