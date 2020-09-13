@@ -744,6 +744,26 @@ video {
   font-family: Raleway, sans-serif;
 }
 
+.text-20{
+  font-size: 20px;
+}
+
+.text-30{
+  font-size: 30px;
+}
+
+.mb-10{
+  margin-bottom: 10px;
+}
+
+.mb-20{
+  margin-bottom: 20px;
+}
+
+.p-10{
+  padding: 10px;
+}
+
 .py-20{
   padding-top: 20px;
   padding-bottom: 20px;
@@ -756,6 +776,22 @@ video {
 
 .fill-current{
   fill: currentColor;
+}
+
+.text-blue{
+  --text-opacity: 1;
+  color: #004EAE;
+  color: rgba(0, 78, 174, var(--text-opacity));
+}
+
+.text-red{
+  --text-opacity: 1;
+  color: #ff3300;
+  color: rgba(255, 51, 0, var(--text-opacity));
+}
+
+.capitalize{
+  text-transform: capitalize;
 }
 
 @keyframes spin{
@@ -966,4 +1002,4 @@ video {
 }
 
 
-/*# sourceMappingURL=src.85a3b76c.css.map */
+/*# sourceMappingURL=src.abe41730.css.map */
