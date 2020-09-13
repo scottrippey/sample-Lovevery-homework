@@ -1,6 +1,9 @@
 import axios from 'axios';
 
-const messagesServer = axios.create({
+// Enable the mock server for now:
+import './messagesClient.mock';
+
+const messagesAPI = axios.create({
   baseURL: 'https://abraxvasbh.execute-api.us-east-2.amazonaws.com/proto'
 });
 
@@ -9,37 +12,43 @@ export interface Message {
   message: string;
 }
 
+export interface ResponseWrapper {
+  statusCode: number;
+  body: string;
+}
+
+
+export interface MessagesByUserResponse {
+  [user: string]: Message[];
+}
+
+export interface MessagesForUserResponse {
+  user: string;
+  message: Message[];
+}
+
+export interface AddMessagePayload extends Message {
+  user: string;
+  operation: 'add_message';
+}
+interface MessagesAddResponse { /* unknown response */ }
+
+
 export const messagesClient = {
   async getAllMessages() {
-    interface MessagesResponse {
-      statusCode: number;
-      body: string;
-    }
-    interface ResponseBody {
-      [user: string]: Message[];
-    }
-    const response = await messagesServer.get<MessagesResponse>('/messages');
+    const response = await messagesAPI.get<ResponseWrapper>('/messages');
 
-    const messagesByUser: ResponseBody = JSON.parse(response.data.body);
+    const messagesByUser: MessagesByUserResponse = JSON.parse(response.data.body);
     return messagesByUser;
   },
   async getUserMessages(user: string) {
-    interface UserMessagesResponse {
-      statusCode: number;
-      body: string;
-    }
-    interface ResponseBody {
-      user: string;
-      message: Message[];
-    }
-    const response = await messagesServer.get<UserMessagesResponse>(`/messages/${user}`);
+    const response = await messagesAPI.get<ResponseWrapper>(`/messages/${user}`);
 
-    const messages = JSON.parse(response.data.body).message;
-    return messages;
+    const messagesResponse: MessagesForUserResponse = JSON.parse(response.data.body);
+    return messagesResponse.message;
   },
-  async addMessage(newMessage: Message & { user: string }) {
-    type AddMessageResponse = unknown;
-    const response = await messagesServer.post<AddMessageResponse>('/messages', {
+  async addMessage(newMessage: Omit<AddMessagePayload, 'operation'>) {
+    const response = await messagesAPI.post<MessagesAddResponse>('/messages', {
       ...newMessage,
       operation: 'add_message',
     });

@@ -10,9 +10,9 @@ export const MessagesList = () => {
 
   return (
     <div>
-      { messages.loading && "Loading messages..."}
-      { messages.error && `Failed to load messages!`}
-      { !messages.loading && users.length === 0 && "No messages to display" }
+      { messages.loading && <div>Loading messages...</div>}
+      { messages.error && <div className="text-red">Failed to load messages! {`${messages.error}`}</div>}
+      { !messages.loading && users.length === 0 && <div>No messages to display</div> }
       { users.map((user) => {
         const msgs = messages.result![user];
         return (
