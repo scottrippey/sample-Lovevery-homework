@@ -37,7 +37,7 @@ function enableMockAdapter() {
 
   const messagesUserPattern = /\/messages\/(.*)/;
   mock.onGet(messagesUserPattern).reply((config) => {
-    const user = config.url!.match(messagesUserPattern)![1];
+    const user = config.url!.match(messagesUserPattern)![1].toLowerCase();
     if (!user) return [ 404, "User not found" ];
     const userMessages = mockMessagesByUser[user];
 
@@ -52,7 +52,8 @@ function enableMockAdapter() {
 
   mock.onPost("/messages").reply((config) => {
     const payload: AddMessagePayload = JSON.parse(config.data);
-    const { operation, user, ...message } = payload;
+    let { operation, user, ...message } = payload;
+    user = user.toLowerCase();
 
     const messages = mockMessagesByUser[user] || (mockMessagesByUser[user] = []);
     messages.push(message);
