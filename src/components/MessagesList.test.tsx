@@ -1,11 +1,20 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { MessagesList } from "./MessagesList";
 
-describe("MessagesList", function () {
-  it("should render", async () => {
-    render(<MessagesList />);
+import { enableMockAdapter } from "~/common/messagesClient.mock";
 
-    expect(screen.getByText("Loading messages...")).toBeDefined();
+enableMockAdapter({ delayResponse: 0 });
+
+describe("MessagesList", function () {
+  it("should render an empty list", async () => {
+    const el = render(<MessagesList />);
+
+    await expect(el.findByText("No messages to display")).resolves.toBeDefined();
+  });
+
+  describe("add", () => {
+    it.todo("should render the 'add' form");
+    it.todo("should add an entry");
   });
 });

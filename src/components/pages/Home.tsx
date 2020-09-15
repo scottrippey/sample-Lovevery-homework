@@ -1,22 +1,15 @@
 import React from 'react';
 import { MessagesList } from "~/components/MessagesList";
-import {AppBar, Typography} from "@material-ui/core";
+import { StatusReporterProvider } from "~/components/StatusReporter";
+import {Header} from "~/components/Header";
 
 export const Home: React.FC = () => {
-    return <>
+    return <StatusReporterProvider>
       <Header />
       <Content>
         <MessagesList />
       </Content>
-    </>;
-};
-
-const Header = () => {
-  return (
-    <AppBar position="sticky" variant="elevation" className="p-10 px-20">
-      <Typography> Rippey's Message App </Typography>
-    </AppBar>
-  );
+    </StatusReporterProvider>;
 };
 
 /**

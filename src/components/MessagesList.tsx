@@ -1,21 +1,33 @@
 import React from 'react';
 import {useAsync, useAsyncCallback} from 'react-async-hook';
-import {Button, Paper, capitalize, Card, CircularProgress, TextField, Typography, Grid} from '@material-ui/core';
+import {Button, Paper, capitalize, TextField, Typography} from '@material-ui/core';
 
 import { messagesClient } from "~/common/messagesClient";
+import {useStatusReporter} from "~/components/StatusReporter";
 
 export const MessagesList = () => {
-  const messages = useAsync(() => messagesClient.getAllMessages(), [], {
-    // Retain previous results when refreshing:
-    setLoading: state => ({ ...state, loading: true }),
-  });
+  const statusReporter = useStatusReporter();
+  const messages = useAsync(async () => {
+      try {
+        statusReporter.setStatus(<>Loading messages...</>)
+        const messages = await messagesClient.getAllMessages();
+        statusReporter.clearStatus();
+
+        return messages;
+      } catch(err) {
+        statusReporter.setStatus(<span className="text-red">Failed to load messages! ${`${err}`}</span>);
+        throw err;
+      }
+    }, [], {
+      // Retain previous results when refreshing:
+      setLoading: state => ({ ...state, loading: true }),
+    }
+  );
 
   const users = messages.result ? Object.keys(messages.result) : [ ];
 
   return (
     <div>
-      { messages.loading && <div> <CircularProgress /> Loading messages...</div>}
-      { messages.error && <div className="text-red">Failed to load messages! {`${messages.error}`}</div>}
       { !messages.loading && users.length === 0 && <div>No messages to display</div> }
       { users.map((user) => {
         const msgs = messages.result![user];
@@ -45,16 +57,22 @@ const AddMessage = ({ onMessageAdded }) => {
   const [ message, setMessage ] = React.useState("");
   const subjectRef = React.useRef<HTMLInputElement>(null);
 
+  const statusReporter = useStatusReporter();
+
   const messageAdd = useAsyncCallback(async () => {
     setSubject("");
     setMessage("");
     subjectRef.current?.focus();
+
+    statusReporter.setStatus(<>Adding message...</>);
 
     await messagesClient.addMessage({
       subject,
       message,
       user,
     });
+
+    statusReporter.clearStatus();
 
     onMessageAdded();
   });
