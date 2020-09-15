@@ -4,6 +4,7 @@ You can see it live at https://scottrippey.github.io/sample-Lovevery-homework/
 You can run it locally by running `npm install` then `npm run dev`
 
 # About this Project
+Here are some of the interesting aspects of this project.
 
 ![Animated Screenshot](https://user-images.githubusercontent.com/430608/93270266-fad54c00-f76d-11ea-9dde-28c8e516fac2.gif)
 
