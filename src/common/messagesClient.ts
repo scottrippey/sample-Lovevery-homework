@@ -1,7 +1,9 @@
 import axios from 'axios';
 
+import { enableMockAdapter } from './messagesClient.mock';
+
 // Enable the mock server for now:
-import './messagesClient.mock';
+enableMockAdapter();
 
 const messagesAPI = axios.create({
   baseURL: 'https://abraxvasbh.execute-api.us-east-2.amazonaws.com/proto'

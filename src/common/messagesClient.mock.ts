@@ -2,16 +2,9 @@ import axios from "axios";
 import MockAdapter from "axios-mock-adapter";
 import {AddMessagePayload, Message, MessagesForUserResponse} from "~/common/messagesClient";
 
-
-const ENABLE_MOCK_ADAPTER = true;
-
-if (ENABLE_MOCK_ADAPTER) {
-  enableMockAdapter();
-}
-
-function enableMockAdapter() {
+export function enableMockAdapter({ delayResponse = 1000 } = { }) {
   // This sets the mock adapter on the default instance
-  var mock = new MockAdapter(axios, { delayResponse: 1000 });
+  var mock = new MockAdapter(axios, { delayResponse });
 
   const mockMessagesByUser: { [user: string]: Message[] } = {
     "scott": [
@@ -25,12 +18,12 @@ function enableMockAdapter() {
   };
 
   mock.onGet("/messages").reply((req) => {
-    const messages = mockMessagesByUser;
+    const body = mockMessagesByUser;
 
     // Encode the response in the expected API format:
     const response = {
       statusCode: 200,
-      body: JSON.stringify(messages)
+      body: JSON.stringify(body)
     };
     return [ response.statusCode, response ];
   });
@@ -38,15 +31,20 @@ function enableMockAdapter() {
   const messagesUserPattern = /\/messages\/(.*)/;
   mock.onGet(messagesUserPattern).reply((config) => {
     const user = config.url!.match(messagesUserPattern)![1].toLowerCase();
-    if (!user) return [ 404, "User not found" ];
     const userMessages = mockMessagesByUser[user];
+    if (!user || !userMessages) return [ 404, "User not found" ];
 
+    const body = {
+      user,
+      message: userMessages,
+    };
 
     // Encode the response in the expected API format:
     const response = {
       statusCode: 200,
-      body: JSON.stringify(userMessages),
+      body: JSON.stringify(body),
     };
+
     return [ response.statusCode, response ];
   });
 
