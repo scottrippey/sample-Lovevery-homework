@@ -56401,7 +56401,60 @@ exports.messagesClient = {
     });
   }
 };
-},{"axios":"dZBD","./messagesClient.mock":"B8nG"}],"pXHl":[function(require,module,exports) {
+},{"axios":"dZBD","./messagesClient.mock":"B8nG"}],"jmcH":[function(require,module,exports) {
+"use strict";
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.useStatusReporter = exports.StatusReporterProvider = void 0;
+
+var react_1 = __importDefault(require("react")); // @ts-ignore
+
+
+var StatusReporterContext = react_1.default.createContext(null);
+
+exports.StatusReporterProvider = function (_a) {
+  var children = _a.children;
+  var statusAPI = useCreateStatusReporter();
+  return react_1.default.createElement(StatusReporterContext.Provider, {
+    value: statusAPI
+  }, children);
+};
+
+function useCreateStatusReporter() {
+  var _a = react_1.default.useState(null),
+      status = _a[0],
+      setStatus = _a[1];
+
+  var statusReporter = react_1.default.useMemo(function () {
+    return {
+      status: status,
+      setStatus: setStatus,
+      clearStatus: function clearStatus() {
+        setStatus(null);
+      }
+    };
+  }, [status]);
+  return statusReporter;
+}
+/**
+ * Retrieves the StatusReporter
+ */
+
+
+function useStatusReporter() {
+  return react_1.default.useContext(StatusReporterContext);
+}
+
+exports.useStatusReporter = useStatusReporter;
+},{"react":"n8MK"}],"pXHl":[function(require,module,exports) {
 "use strict";
 
 var __assign = this && this.__assign || function () {
@@ -56582,9 +56635,44 @@ var core_1 = require("@material-ui/core");
 
 var messagesClient_1 = require("~/common/messagesClient");
 
+var StatusReporter_1 = require("~/components/StatusReporter");
+
 exports.MessagesList = function () {
+  var statusReporter = StatusReporter_1.useStatusReporter();
   var messages = react_async_hook_1.useAsync(function () {
-    return messagesClient_1.messagesClient.getAllMessages();
+    return __awaiter(void 0, void 0, void 0, function () {
+      var messages_1, err_1;
+      return __generator(this, function (_a) {
+        switch (_a.label) {
+          case 0:
+            _a.trys.push([0, 2,, 3]);
+
+            statusReporter.setStatus(react_1.default.createElement(react_1.default.Fragment, null, "Loading messages..."));
+            return [4
+            /*yield*/
+            , messagesClient_1.messagesClient.getAllMessages()];
+
+          case 1:
+            messages_1 = _a.sent();
+            statusReporter.clearStatus();
+            return [2
+            /*return*/
+            , messages_1];
+
+          case 2:
+            err_1 = _a.sent();
+            statusReporter.setStatus(react_1.default.createElement("span", {
+              className: "text-red"
+            }, "Failed to load messages! $", "" + err_1));
+            throw err_1;
+
+          case 3:
+            return [2
+            /*return*/
+            ];
+        }
+      });
+    });
   }, [], {
     // Retain previous results when refreshing:
     setLoading: function setLoading(state) {
@@ -56594,9 +56682,7 @@ exports.MessagesList = function () {
     }
   });
   var users = messages.result ? Object.keys(messages.result) : [];
-  return react_1.default.createElement("div", null, messages.loading && react_1.default.createElement("div", null, " ", react_1.default.createElement(core_1.CircularProgress, null), " Loading messages..."), messages.error && react_1.default.createElement("div", {
-    className: "text-red"
-  }, "Failed to load messages! ", "" + messages.error), !messages.loading && users.length === 0 && react_1.default.createElement("div", null, "No messages to display"), users.map(function (user) {
+  return react_1.default.createElement("div", null, !messages.loading && users.length === 0 && react_1.default.createElement("div", null, "No messages to display"), users.map(function (user) {
     var msgs = messages.result[user];
     return react_1.default.createElement(core_1.Paper, {
       key: user,
@@ -56634,6 +56720,7 @@ var AddMessage = function AddMessage(_a) {
       setMessage = _d[1];
 
   var subjectRef = react_1.default.useRef(null);
+  var statusReporter = StatusReporter_1.useStatusReporter();
   var messageAdd = react_async_hook_1.useAsyncCallback(function () {
     return __awaiter(void 0, void 0, void 0, function () {
       var _a;
@@ -56644,6 +56731,7 @@ var AddMessage = function AddMessage(_a) {
             setSubject("");
             setMessage("");
             (_a = subjectRef.current) === null || _a === void 0 ? void 0 : _a.focus();
+            statusReporter.setStatus(react_1.default.createElement(react_1.default.Fragment, null, "Adding message..."));
             return [4
             /*yield*/
             , messagesClient_1.messagesClient.addMessage({
@@ -56655,6 +56743,7 @@ var AddMessage = function AddMessage(_a) {
           case 1:
             _b.sent();
 
+            statusReporter.clearStatus();
             onMessageAdded();
             return [2
             /*return*/
@@ -56705,7 +56794,41 @@ var AddMessage = function AddMessage(_a) {
     variant: "contained"
   }, "Add ", messageAdd.loading && "...")));
 };
-},{"react":"n8MK","react-async-hook":"B8X3","@material-ui/core":"dT3j","~/common/messagesClient":"JpP1"}],"HF8J":[function(require,module,exports) {
+},{"react":"n8MK","react-async-hook":"B8X3","@material-ui/core":"dT3j","~/common/messagesClient":"JpP1","~/components/StatusReporter":"jmcH"}],"tmV9":[function(require,module,exports) {
+"use strict";
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Header = void 0;
+
+var StatusReporter_1 = require("~/components/StatusReporter");
+
+var core_1 = require("@material-ui/core");
+
+var react_1 = __importDefault(require("react"));
+
+exports.Header = function () {
+  var statusReporter = StatusReporter_1.useStatusReporter();
+  return react_1.default.createElement(core_1.AppBar, {
+    position: "sticky",
+    variant: "elevation",
+    className: "p-10 px-20"
+  }, react_1.default.createElement(core_1.Typography, null, react_1.default.createElement("span", null, " Rippey's Message App "), statusReporter.status && react_1.default.createElement("span", {
+    className: "ml-20"
+  }, react_1.default.createElement(core_1.CircularProgress, {
+    size: 16,
+    color: "inherit",
+    className: "inline-block"
+  }), " ", statusReporter.status)));
+};
+},{"~/components/StatusReporter":"jmcH","@material-ui/core":"dT3j","react":"n8MK"}],"HF8J":[function(require,module,exports) {
 "use strict";
 
 var __importDefault = this && this.__importDefault || function (mod) {
@@ -56723,18 +56846,12 @@ var react_1 = __importDefault(require("react"));
 
 var MessagesList_1 = require("~/components/MessagesList");
 
-var core_1 = require("@material-ui/core");
+var StatusReporter_1 = require("~/components/StatusReporter");
+
+var Header_1 = require("~/components/Header");
 
 exports.Home = function () {
-  return react_1.default.createElement(react_1.default.Fragment, null, react_1.default.createElement(Header, null), react_1.default.createElement(Content, null, react_1.default.createElement(MessagesList_1.MessagesList, null)));
-};
-
-var Header = function Header() {
-  return react_1.default.createElement(core_1.AppBar, {
-    position: "sticky",
-    variant: "elevation",
-    className: "p-10 px-20"
-  }, react_1.default.createElement(core_1.Typography, null, " Rippey's Message App "));
+  return react_1.default.createElement(StatusReporter_1.StatusReporterProvider, null, react_1.default.createElement(Header_1.Header, null), react_1.default.createElement(Content, null, react_1.default.createElement(MessagesList_1.MessagesList, null)));
 };
 /**
  * Just a wrapper that includes the content padding
@@ -56747,7 +56864,7 @@ var Content = function Content(_a) {
     className: "px-20 lg:px-40 py-20"
   }, children);
 };
-},{"react":"n8MK","~/components/MessagesList":"pXHl","@material-ui/core":"dT3j"}],"zo2T":[function(require,module,exports) {
+},{"react":"n8MK","~/components/MessagesList":"pXHl","~/components/StatusReporter":"jmcH","~/components/Header":"tmV9"}],"zo2T":[function(require,module,exports) {
 "use strict";
 
 var __importDefault = this && this.__importDefault || function (mod) {
@@ -56770,4 +56887,4 @@ var Home_1 = require("~/components/pages/Home");
 
 react_dom_1.default.render(react_1.default.createElement(Home_1.Home, null), document.getElementById('app-root'));
 },{"regenerator-runtime/runtime":"QVnC","react":"n8MK","react-dom":"NKHc","~/components/pages/Home":"HF8J"}]},{},["zo2T"], null)
-//# sourceMappingURL=src.456f287e.js.map
+//# sourceMappingURL=src.7ab301c6.js.map
