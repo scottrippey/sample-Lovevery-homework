@@ -736,6 +736,10 @@ video {
   background-color: rgba(255, 255, 255, var(--bg-opacity));
 }
 
+.inline-block{
+  display: inline-block;
+}
+
 .table{
   display: table;
 }
@@ -750,6 +754,10 @@ video {
 
 .mb-20{
   margin-bottom: 20px;
+}
+
+.ml-20{
+  margin-left: 20px;
 }
 
 .p-10{
@@ -786,8 +794,8 @@ video {
 
 .text-red{
   --text-opacity: 1;
-  color: #ff3300;
-  color: rgba(255, 51, 0, var(--text-opacity));
+  color: #ff6666;
+  color: rgba(255, 102, 102, var(--text-opacity));
 }
 
 .capitalize{
@@ -1002,4 +1010,4 @@ video {
 }
 
 
-/*# sourceMappingURL=src.9aaf3597.css.map */
+/*# sourceMappingURL=src.83a3f268.css.map */

@@ -1,10 +1,12 @@
 import axios from "axios";
 import MockAdapter from "axios-mock-adapter";
-import {AddMessagePayload, Message, MessagesForUserResponse} from "~/common/messagesClient";
+import {AddMessagePayload, Message, resetClient} from "~/common/messagesClient";
 
 export function enableMockAdapter({ delayResponse = 1000 } = { }) {
   // This sets the mock adapter on the default instance
   var mock = new MockAdapter(axios, { delayResponse });
+
+  resetClient();
 
   const mockMessagesByUser: { [user: string]: Message[] } = {
     "scott": [

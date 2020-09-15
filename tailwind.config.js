@@ -24,7 +24,7 @@ module.exports = {
       'gray-dark': '#333333', // (Content and in-form search icon)
       'white': '#FFFFFF', // (Header links / icons and search input)
       'black': '#000000',
-      'red': '#ff3300',
+      'red': '#ff6666',
     },
     screens: {
       "lg": { min: "640px" }

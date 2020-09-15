@@ -1,13 +1,15 @@
 import axios from 'axios';
 
-import { enableMockAdapter } from './messagesClient.mock';
+let messagesAPI = createClient();
+function createClient() {
+  return axios.create({
+    baseURL: 'https://abraxvasbh.execute-api.us-east-2.amazonaws.com/proto'
+  });
+}
+export function resetClient() {
+  messagesAPI = createClient();
+}
 
-// Enable the mock server for now:
-enableMockAdapter();
-
-const messagesAPI = axios.create({
-  baseURL: 'https://abraxvasbh.execute-api.us-east-2.amazonaws.com/proto'
-});
 
 export interface Message {
   subject: string;

@@ -8,7 +8,8 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 
 import { messagesClient } from "~/common/messagesClient";
-import {useStatusReporter} from "~/components/StatusReporter";
+import { useStatusReporter } from "~/components/StatusReporter";
+import {enableMockAdapter} from "~/common/messagesClient.mock";
 
 export const MessagesList = () => {
   const statusReporter = useStatusReporter();
@@ -20,7 +21,7 @@ export const MessagesList = () => {
 
         return messages;
       } catch(err) {
-        statusReporter.setStatus(<span className="text-red">Failed to load messages! ${`${err}`}</span>);
+        statusReporter.setStatus(<ServerError err={err} onMockEnabled={() => messages.execute()} />);
         throw err;
       }
     }, [], {
@@ -115,3 +116,28 @@ const AddMessage = ({ onMessageAdded }) => {
     </Paper>
   )
 };
+
+/**
+ * If the server isn't reachable, let's allow a mock adapter to be used.
+ * @param err
+ * @param onMockEnabled
+ * @constructor
+ */
+const ServerError = ({ err, onMockEnabled }) => {
+  const handleEnableMock = React.useCallback((ev) => {
+    ev.preventDefault();
+
+    enableMockAdapter();
+    onMockEnabled();
+
+  }, [ ]);
+
+  return (<>
+    <span className="text-red">
+      Failed to load messages! {`${err}`}
+    </span> {" "}
+    <a href="#" onClick={handleEnableMock}>
+      Enable a mock server?
+    </a>
+  </>);
+}

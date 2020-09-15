@@ -4,12 +4,14 @@ import { StatusReporterProvider } from "~/components/StatusReporter";
 import {Header} from "~/components/Header";
 
 export const Home: React.FC = () => {
-    return <StatusReporterProvider>
-      <Header />
-      <Content>
-        <MessagesList />
-      </Content>
-    </StatusReporterProvider>;
+    return (
+      <StatusReporterProvider>
+        <Header />
+        <Content>
+          <MessagesList />
+        </Content>
+      </StatusReporterProvider>
+    );
 };
 
 /**
