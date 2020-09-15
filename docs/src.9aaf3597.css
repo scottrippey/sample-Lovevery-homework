@@ -744,16 +744,8 @@ video {
   font-family: Raleway, sans-serif;
 }
 
-.text-20{
-  font-size: 20px;
-}
-
-.text-30{
-  font-size: 30px;
-}
-
-.mb-10{
-  margin-bottom: 10px;
+.mt-10{
+  margin-top: 10px;
 }
 
 .mb-20{
@@ -764,6 +756,10 @@ video {
   padding: 10px;
 }
 
+.p-20{
+  padding: 20px;
+}
+
 .py-20{
   padding-top: 20px;
   padding-bottom: 20px;
@@ -772,6 +768,10 @@ video {
 .px-20{
   padding-left: 20px;
   padding-right: 20px;
+}
+
+.sticky{
+  position: sticky;
 }
 
 .fill-current{
@@ -1002,4 +1002,4 @@ video {
 }
 
 
-/*# sourceMappingURL=src.abe41730.css.map */
+/*# sourceMappingURL=src.9aaf3597.css.map */

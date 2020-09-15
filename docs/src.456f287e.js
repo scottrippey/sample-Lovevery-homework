@@ -56087,21 +56087,18 @@ var __importDefault = this && this.__importDefault || function (mod) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.enableMockAdapter = void 0;
 
 var axios_1 = __importDefault(require("axios"));
 
 var axios_mock_adapter_1 = __importDefault(require("axios-mock-adapter"));
 
-var ENABLE_MOCK_ADAPTER = true;
+function enableMockAdapter(_a) {
+  var _b = (_a === void 0 ? {} : _a).delayResponse,
+      delayResponse = _b === void 0 ? 1000 : _b; // This sets the mock adapter on the default instance
 
-if (ENABLE_MOCK_ADAPTER) {
-  enableMockAdapter();
-}
-
-function enableMockAdapter() {
-  // This sets the mock adapter on the default instance
   var mock = new axios_mock_adapter_1.default(axios_1.default, {
-    delayResponse: 1000
+    delayResponse: delayResponse
   });
   var mockMessagesByUser = {
     "scott": [{
@@ -56120,23 +56117,27 @@ function enableMockAdapter() {
     }]
   };
   mock.onGet("/messages").reply(function (req) {
-    var messages = mockMessagesByUser; // Encode the response in the expected API format:
+    var body = mockMessagesByUser; // Encode the response in the expected API format:
 
     var response = {
       statusCode: 200,
-      body: JSON.stringify(messages)
+      body: JSON.stringify(body)
     };
     return [response.statusCode, response];
   });
   var messagesUserPattern = /\/messages\/(.*)/;
   mock.onGet(messagesUserPattern).reply(function (config) {
-    var user = config.url.match(messagesUserPattern)[1];
-    if (!user) return [404, "User not found"];
-    var userMessages = mockMessagesByUser[user]; // Encode the response in the expected API format:
+    var user = config.url.match(messagesUserPattern)[1].toLowerCase();
+    var userMessages = mockMessagesByUser[user];
+    if (!user || !userMessages) return [404, "User not found"];
+    var body = {
+      user: user,
+      message: userMessages
+    }; // Encode the response in the expected API format:
 
     var response = {
       statusCode: 200,
-      body: JSON.stringify(userMessages)
+      body: JSON.stringify(body)
     };
     return [response.statusCode, response];
   });
@@ -56147,11 +56148,14 @@ function enableMockAdapter() {
         user = payload.user,
         message = __rest(payload, ["operation", "user"]);
 
+    user = user.toLowerCase();
     var messages = mockMessagesByUser[user] || (mockMessagesByUser[user] = []);
     messages.push(message);
     return [201, "Message created successfully"];
   });
 }
+
+exports.enableMockAdapter = enableMockAdapter;
 },{"axios":"dZBD","axios-mock-adapter":"YRYQ"}],"JpP1":[function(require,module,exports) {
 "use strict";
 
@@ -56325,11 +56329,12 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.messagesClient = void 0;
 
-var axios_1 = __importDefault(require("axios")); // Enable the mock server for now:
+var axios_1 = __importDefault(require("axios"));
+
+var messagesClient_mock_1 = require("./messagesClient.mock"); // Enable the mock server for now:
 
 
-require("./messagesClient.mock");
-
+messagesClient_mock_1.enableMockAdapter();
 var messagesAPI = axios_1.default.create({
   baseURL: 'https://abraxvasbh.execute-api.us-east-2.amazonaws.com/proto'
 });
@@ -56398,6 +56403,22 @@ exports.messagesClient = {
 };
 },{"axios":"dZBD","./messagesClient.mock":"B8nG"}],"pXHl":[function(require,module,exports) {
 "use strict";
+
+var __assign = this && this.__assign || function () {
+  __assign = Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
+
+      for (var p in s) {
+        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+      }
+    }
+
+    return t;
+  };
+
+  return __assign.apply(this, arguments);
+};
 
 var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
@@ -56564,26 +56585,33 @@ var messagesClient_1 = require("~/common/messagesClient");
 exports.MessagesList = function () {
   var messages = react_async_hook_1.useAsync(function () {
     return messagesClient_1.messagesClient.getAllMessages();
-  }, []);
+  }, [], {
+    // Retain previous results when refreshing:
+    setLoading: function setLoading(state) {
+      return __assign(__assign({}, state), {
+        loading: true
+      });
+    }
+  });
   var users = messages.result ? Object.keys(messages.result) : [];
   return react_1.default.createElement("div", null, messages.loading && react_1.default.createElement("div", null, " ", react_1.default.createElement(core_1.CircularProgress, null), " Loading messages..."), messages.error && react_1.default.createElement("div", {
     className: "text-red"
   }, "Failed to load messages! ", "" + messages.error), !messages.loading && users.length === 0 && react_1.default.createElement("div", null, "No messages to display"), users.map(function (user) {
     var msgs = messages.result[user];
-    return react_1.default.createElement(core_1.Card, {
+    return react_1.default.createElement(core_1.Paper, {
       key: user,
       elevation: 5,
-      className: "mb-10 p-10"
-    }, react_1.default.createElement("h1", {
-      className: "text-30 text-blue mb-20"
+      className: "p-20 mb-20"
+    }, react_1.default.createElement(core_1.Typography, {
+      variant: "h4",
+      className: "text-blue"
     }, " ", core_1.capitalize(user), " "), msgs.map(function (msg, msgIndex) {
       return react_1.default.createElement("div", {
-        key: msgIndex
-      }, react_1.default.createElement("h2", {
-        className: "text-20 text-bold"
-      }, " ", msg.subject, " "), react_1.default.createElement("p", {
-        className: "mb-20"
-      }, " ", msg.message, " "));
+        key: msgIndex,
+        className: "mt-10"
+      }, react_1.default.createElement(core_1.Typography, {
+        variant: "h5"
+      }, " ", msg.subject, " "), react_1.default.createElement(core_1.Typography, null, " ", msg.message, " "));
     }));
   }), react_1.default.createElement(AddMessage, {
     onMessageAdded: messages.execute
@@ -56605,11 +56633,17 @@ var AddMessage = function AddMessage(_a) {
       message = _d[0],
       setMessage = _d[1];
 
+  var subjectRef = react_1.default.useRef(null);
   var messageAdd = react_async_hook_1.useAsyncCallback(function () {
     return __awaiter(void 0, void 0, void 0, function () {
-      return __generator(this, function (_a) {
-        switch (_a.label) {
+      var _a;
+
+      return __generator(this, function (_b) {
+        switch (_b.label) {
           case 0:
+            setSubject("");
+            setMessage("");
+            (_a = subjectRef.current) === null || _a === void 0 ? void 0 : _a.focus();
             return [4
             /*yield*/
             , messagesClient_1.messagesClient.addMessage({
@@ -56619,7 +56653,7 @@ var AddMessage = function AddMessage(_a) {
             })];
 
           case 1:
-            _a.sent();
+            _b.sent();
 
             onMessageAdded();
             return [2
@@ -56629,28 +56663,40 @@ var AddMessage = function AddMessage(_a) {
       });
     });
   });
-  return react_1.default.createElement(core_1.Card, {
+  return react_1.default.createElement(core_1.Paper, {
     elevation: 5,
-    className: "p-10"
-  }, react_1.default.createElement("form", null, react_1.default.createElement(core_1.TextField, {
+    className: "p-20"
+  }, react_1.default.createElement("form", {
+    onSubmit: function onSubmit(e) {
+      return e.preventDefault();
+    }
+  }, react_1.default.createElement(core_1.TextField, {
     label: "User",
     value: user,
     onChange: function onChange(e) {
       return setUser(e.target.value);
-    }
+    },
+    fullWidth: true,
+    margin: "normal"
   }), react_1.default.createElement(core_1.TextField, {
     label: "Subject",
     value: subject,
     onChange: function onChange(e) {
       return setSubject(e.target.value);
-    }
+    },
+    inputRef: subjectRef,
+    fullWidth: true,
+    margin: "normal"
   }), react_1.default.createElement(core_1.TextField, {
     label: "Message",
     value: message,
     onChange: function onChange(e) {
       return setMessage(e.target.value);
-    }
+    },
+    fullWidth: true,
+    margin: "normal"
   }), react_1.default.createElement(core_1.Button, {
+    type: "submit",
     onClick: function onClick() {
       return messageAdd.execute();
     },
@@ -56677,8 +56723,18 @@ var react_1 = __importDefault(require("react"));
 
 var MessagesList_1 = require("~/components/MessagesList");
 
+var core_1 = require("@material-ui/core");
+
 exports.Home = function () {
-  return react_1.default.createElement(react_1.default.Fragment, null, react_1.default.createElement(Content, null, react_1.default.createElement(MessagesList_1.MessagesList, null)));
+  return react_1.default.createElement(react_1.default.Fragment, null, react_1.default.createElement(Header, null), react_1.default.createElement(Content, null, react_1.default.createElement(MessagesList_1.MessagesList, null)));
+};
+
+var Header = function Header() {
+  return react_1.default.createElement(core_1.AppBar, {
+    position: "sticky",
+    variant: "elevation",
+    className: "p-10 px-20"
+  }, react_1.default.createElement(core_1.Typography, null, " Rippey's Message App "));
 };
 /**
  * Just a wrapper that includes the content padding
@@ -56691,7 +56747,7 @@ var Content = function Content(_a) {
     className: "px-20 lg:px-40 py-20"
   }, children);
 };
-},{"react":"n8MK","~/components/MessagesList":"pXHl"}],"zo2T":[function(require,module,exports) {
+},{"react":"n8MK","~/components/MessagesList":"pXHl","@material-ui/core":"dT3j"}],"zo2T":[function(require,module,exports) {
 "use strict";
 
 var __importDefault = this && this.__importDefault || function (mod) {
@@ -56714,4 +56770,4 @@ var Home_1 = require("~/components/pages/Home");
 
 react_dom_1.default.render(react_1.default.createElement(Home_1.Home, null), document.getElementById('app-root'));
 },{"regenerator-runtime/runtime":"QVnC","react":"n8MK","react-dom":"NKHc","~/components/pages/Home":"HF8J"}]},{},["zo2T"], null)
-//# sourceMappingURL=src.74cec147.js.map
+//# sourceMappingURL=src.456f287e.js.map
