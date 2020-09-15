@@ -22,6 +22,8 @@
   "devDependencies": {
     "@material-ui/core": "^4.11.0",
     "@svgr/parcel-plugin-svgr": "^5.4.0",
+    "@testing-library/react": "^11.0.4",
+    "@types/jest": "^26.0.13",
     "@types/react-dom": "^16.9.8",
     "axios": "^0.20.0",
     "axios-mock-adapter": "^1.18.2",
