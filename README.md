@@ -5,6 +5,8 @@ You can run it locally by running `npm install` then `npm run dev`
 
 # About this Project
 
+TODO: IMAGE...
+
 ## Tech Stack
 For the tech stack, I chose **React** and **TypeScript**, with a **Parcel** bundler. Since the UI style was not specified, I used the **Material UI** library, with minimal use of **Tailwind CSS** too.  To interface with the REST API, I considered using just raw `fetch`, but wanted to give **Axios** a try.  And finally, I used **Jest** for the unit tests, along with **React Testing Library**.
 
