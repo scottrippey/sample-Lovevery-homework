@@ -1,6 +1,10 @@
-import {useStatusReporter} from "~/components/StatusReporter";
-import {AppBar, CircularProgress, Typography} from "@material-ui/core";
 import React from "react";
+
+import AppBar from '@material-ui/core/AppBar';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Typography from '@material-ui/core/Typography';
+
+import {useStatusReporter} from "~/components/StatusReporter";
 
 export const Header = () => {
   const statusReporter = useStatusReporter();

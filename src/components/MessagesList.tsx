@@ -1,6 +1,11 @@
 import React from 'react';
 import {useAsync, useAsyncCallback} from 'react-async-hook';
-import {Button, Paper, capitalize, TextField, Typography} from '@material-ui/core';
+
+import Button from '@material-ui/core/Button';
+import Paper from '@material-ui/core/Paper';
+import capitalize from '@material-ui/core/utils/capitalize';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
 
 import { messagesClient } from "~/common/messagesClient";
 import {useStatusReporter} from "~/components/StatusReporter";
