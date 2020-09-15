@@ -136,7 +136,7 @@ const ServerError = ({ err, onMockEnabled }) => {
     <span className="text-red">
       Failed to load messages! {`${err}`}
     </span> {" "}
-    <a href="#" onClick={handleEnableMock}>
+    <a href="#" onClick={handleEnableMock} className="underline">
       Enable a mock server?
     </a>
   </>);

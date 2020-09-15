@@ -27031,7 +27031,8 @@ var ServerError = function ServerError(_a) {
     className: "text-red"
   }, "Failed to load messages! ", "" + err), " ", " ", react_1.default.createElement("a", {
     href: "#",
-    onClick: handleEnableMock
+    onClick: handleEnableMock,
+    className: "underline"
   }, "Enable a mock server?"));
 };
 },{"react":"n8MK","react-async-hook":"B8X3","@material-ui/core/Button":"uzLy","@material-ui/core/Paper":"mtQp","@material-ui/core/utils/capitalize":"AfXI","@material-ui/core/TextField":"JZs9","@material-ui/core/Typography":"pi2F","~/common/messagesClient":"JpP1","~/components/StatusReporter":"jmcH","~/common/messagesClient.mock":"B8nG"}],"XUuQ":[function(require,module,exports) {
@@ -27606,4 +27607,4 @@ var Home_1 = require("~/components/pages/Home");
 
 react_dom_1.default.render(react_1.default.createElement(Home_1.Home, null), document.getElementById('app-root'));
 },{"regenerator-runtime/runtime":"QVnC","react":"n8MK","react-dom":"NKHc","~/components/pages/Home":"HF8J"}]},{},["zo2T"], null)
-//# sourceMappingURL=src.2841c431.js.map
+//# sourceMappingURL=src.ca6d9f95.js.map
