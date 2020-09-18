@@ -802,6 +802,10 @@ video {
   text-transform: capitalize;
 }
 
+.underline{
+  text-decoration: underline;
+}
+
 @keyframes spin{
   to{
     transform: rotate(360deg);
@@ -1010,4 +1014,4 @@ video {
 }
 
 
-/*# sourceMappingURL=src.83a3f268.css.map */
+/*# sourceMappingURL=src.69855572.css.map */
