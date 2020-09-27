@@ -1,19 +1,19 @@
 import axios from "axios";
 import MockAdapter from "axios-mock-adapter";
-import {AddMessagePayload, Message, resetClient} from "~/common/messagesClient";
+import { AddMessagePayload, Message, resetClient } from "~/common/messagesClient";
 
-export function enableMockAdapter({ delayResponse = 1000 } = { }) {
+export function enableMockAdapter({ delayResponse = 1000 } = {}) {
   // This sets the mock adapter on the default instance
   var mock = new MockAdapter(axios, { delayResponse });
 
   resetClient();
 
   const mockMessagesByUser: { [user: string]: Message[] } = {
-    "scott": [
+    scott: [
       { subject: "I love mocks", message: "I love mocks.  This is a mock message.  Mocks mocks mocks." },
       { subject: "I love socks", message: "I love socks.  I'm wearing socks.  Socks socks socks." },
     ],
-    "jim": [
+    jim: [
       { subject: "Question: what kind of bear is best?", message: "Black bear." },
       { subject: "Fact: bears love beets", message: "Bears.  Beets.  Battlestar Galactica." },
     ],
@@ -25,16 +25,16 @@ export function enableMockAdapter({ delayResponse = 1000 } = { }) {
     // Encode the response in the expected API format:
     const response = {
       statusCode: 200,
-      body: JSON.stringify(body)
+      body: JSON.stringify(body),
     };
-    return [ response.statusCode, response ];
+    return [response.statusCode, response];
   });
 
   const messagesUserPattern = /\/messages\/(.*)/;
   mock.onGet(messagesUserPattern).reply((config) => {
     const user = config.url!.match(messagesUserPattern)![1].toLowerCase();
     const userMessages = mockMessagesByUser[user];
-    if (!user || !userMessages) return [ 404, "User not found" ];
+    if (!user || !userMessages) return [404, "User not found"];
 
     const body = {
       user,
@@ -47,7 +47,7 @@ export function enableMockAdapter({ delayResponse = 1000 } = { }) {
       body: JSON.stringify(body),
     };
 
-    return [ response.statusCode, response ];
+    return [response.statusCode, response];
   });
 
   mock.onPost("/messages").reply((config) => {
@@ -58,6 +58,6 @@ export function enableMockAdapter({ delayResponse = 1000 } = { }) {
     const messages = mockMessagesByUser[user] || (mockMessagesByUser[user] = []);
     messages.push(message);
 
-    return [ 201, "Message created successfully" ];
+    return [201, "Message created successfully"];
   });
 }
