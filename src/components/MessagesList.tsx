@@ -127,16 +127,16 @@ const AddMessage = ({ onMessageAdded }) => {
  * @constructor
  */
 const ServerError = ({ err, onMockEnabled }) => {
-  const handleEnableMock = React.useCallback((ev) => {
+  const handleEnableMock = (ev) => {
     ev.preventDefault();
 
     enableMockAdapter();
     onMockEnabled();
-  }, []);
+  };
 
   return (
     <>
-      <span className="text-red">Failed to load messages! {`${err}`}</span>{" "}
+      <span className="text-red mr-20">Failed to load messages! {`${err}`}</span>
       <a href="#" onClick={handleEnableMock} className="underline">
         Enable a mock server?
       </a>
