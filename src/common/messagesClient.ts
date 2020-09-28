@@ -34,7 +34,6 @@ export interface MessagesForUserResponse {
 }
 export interface AddMessagePayload extends Message {
   user: string;
-  operation: "add_message";
 }
 export interface MessagesAddResponse {
   /* unknown response */
@@ -69,7 +68,7 @@ export const messagesClient = {
    * Adds a new message for the given user
    * @param newMessage - The new message to add
    */
-  async addMessage(newMessage: Omit<AddMessagePayload, "operation">) {
+  async addMessage(newMessage: AddMessagePayload) {
     const response = await messagesAPI.post<MessagesAddResponse>("/messages", {
       ...newMessage,
       operation: "add_message",

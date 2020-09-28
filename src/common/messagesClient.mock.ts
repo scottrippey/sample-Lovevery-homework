@@ -62,7 +62,7 @@ export function enableMockAdapter({ delayResponse = 1000 } = {}) {
   });
 
   mock.onPost("/messages").reply((config) => {
-    const payload: AddMessagePayload = JSON.parse(config.data);
+    const payload: AddMessagePayload & { operation: "add_message" } = JSON.parse(config.data);
     let { operation, user, ...message } = payload;
     user = user.toLowerCase();
 

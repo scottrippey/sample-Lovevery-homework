@@ -7,7 +7,7 @@ import capitalize from "@material-ui/core/utils/capitalize";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 
-import { messagesClient } from "~/common/messagesClient";
+import { AddMessagePayload, MessagesByUserResponse, messagesClient } from "~/common/messagesClient";
 import { useStatusReporter } from "~/components/StatusReporter";
 import { enableMockAdapter } from "~/common/messagesClient.mock";
 
@@ -64,18 +64,33 @@ export function MessagesList() {
     </>
   );
 
+  function handleMessageAdding(newMessage: AddMessagePayload) {
+    // Proactively add the user to the UI:
+    if (messages.result) {
+      injectMessageIntoExistingMessages(messages.result, newMessage);
+      // Note, this will get overridden anyway after we refresh the list
+    }
+  }
+  function handleMessageAdded() {
+    messages.execute();
+  }
+
   return (
     <div>
       {usersList}
-      <AddMessage onMessageAdded={messages.execute} />
+      <AddMessage onMessageAdding={handleMessageAdding} onMessageAdded={handleMessageAdded} />
     </div>
   );
 }
 
+interface AddMessageProps {
+  onMessageAdding: (newMessage: AddMessagePayload) => void;
+  onMessageAdded: () => void;
+}
 /**
  * Renders a "add message" form
  */
-function AddMessage({ onMessageAdded }: { onMessageAdded: () => void }) {
+function AddMessage({ onMessageAdding, onMessageAdded }: AddMessageProps) {
   const [user, setUser] = React.useState("");
   const [subject, setSubject] = React.useState("");
   const [message, setMessage] = React.useState("");
@@ -84,6 +99,13 @@ function AddMessage({ onMessageAdded }: { onMessageAdded: () => void }) {
   const statusReporter = useStatusReporter();
 
   const messageAdd = useAsyncCallback(async () => {
+    const newMessage: AddMessagePayload = {
+      subject,
+      message,
+      user,
+    };
+    onMessageAdding(newMessage);
+
     // Reset the form, and focus the subject:
     setSubject("");
     setMessage("");
@@ -91,11 +113,7 @@ function AddMessage({ onMessageAdded }: { onMessageAdded: () => void }) {
 
     // Add the message:
     statusReporter.setStatus(<>Adding message...</>);
-    await messagesClient.addMessage({
-      subject,
-      message,
-      user,
-    });
+    await messagesClient.addMessage(newMessage);
 
     statusReporter.clearStatus();
 
@@ -154,4 +172,18 @@ function ServerError({ err, onMockEnabled }: { err: Error; onMockEnabled: () => 
       </a>
     </>
   );
+}
+
+/**
+ * Utility to inject the new message into the existing messages structure:
+ */
+function injectMessageIntoExistingMessages(result: MessagesByUserResponse, newMessage: AddMessagePayload) {
+  const { user, ...message } = newMessage;
+
+  // Inject the new message into the existing messages:
+  const userKey = user.toLowerCase();
+  if (!(userKey in result)) {
+    result[userKey] = [];
+  }
+  result[userKey].push(message);
 }
