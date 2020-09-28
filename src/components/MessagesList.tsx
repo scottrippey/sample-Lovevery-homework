@@ -7,12 +7,16 @@ import capitalize from "@material-ui/core/utils/capitalize";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 
-import { messagesClient } from "~/common/messagesClient";
+import { AddMessagePayload, MessagesByUserResponse, messagesClient } from "~/common/messagesClient";
 import { useStatusReporter } from "~/components/StatusReporter";
 import { enableMockAdapter } from "~/common/messagesClient.mock";
 
-export const MessagesList = () => {
+/**
+ * Displays a list of messages, along with a Add Messages section
+ */
+export function MessagesList() {
   const statusReporter = useStatusReporter();
+  // Retrieve all messages:
   const messages = useAsync(
     async () => {
       try {
@@ -22,6 +26,7 @@ export const MessagesList = () => {
 
         return messages;
       } catch (err) {
+        // Show the error; if the mock is enabled, refresh:
         statusReporter.setStatus(<ServerError err={err} onMockEnabled={() => messages.execute()} />);
         throw err;
       }
@@ -35,11 +40,12 @@ export const MessagesList = () => {
 
   const users = messages.result ? Object.keys(messages.result) : [];
 
-  return (
-    <div>
-      {!messages.loading && users.length === 0 && <div>No messages to display</div>}
+  const usersList = (
+    <>
+      {!messages.loading && users.length === 0 && <div> No messages to display </div>}
       {users.map((user) => {
         const msgs = messages.result![user];
+        // Render the User with all messages:
         return (
           <Paper key={user} elevation={5} className="p-20 mb-20">
             <Typography variant="h4" className="text-blue">
@@ -55,13 +61,36 @@ export const MessagesList = () => {
           </Paper>
         );
       })}
+    </>
+  );
 
-      <AddMessage onMessageAdded={messages.execute} />
+  function handleMessageAdding(newMessage: AddMessagePayload) {
+    // Proactively add the user to the UI:
+    if (messages.result) {
+      injectMessageIntoExistingMessages(messages.result, newMessage);
+      // Note, this will get overridden anyway after we refresh the list
+    }
+  }
+  function handleMessageAdded() {
+    messages.execute();
+  }
+
+  return (
+    <div>
+      {usersList}
+      <AddMessage onMessageAdding={handleMessageAdding} onMessageAdded={handleMessageAdded} />
     </div>
   );
-};
+}
 
-const AddMessage = ({ onMessageAdded }) => {
+interface AddMessageProps {
+  onMessageAdding: (newMessage: AddMessagePayload) => void;
+  onMessageAdded: () => void;
+}
+/**
+ * Renders a "add message" form
+ */
+function AddMessage({ onMessageAdding, onMessageAdded }: AddMessageProps) {
   const [user, setUser] = React.useState("");
   const [subject, setSubject] = React.useState("");
   const [message, setMessage] = React.useState("");
@@ -70,17 +99,21 @@ const AddMessage = ({ onMessageAdded }) => {
   const statusReporter = useStatusReporter();
 
   const messageAdd = useAsyncCallback(async () => {
+    const newMessage: AddMessagePayload = {
+      subject,
+      message,
+      user,
+    };
+    onMessageAdding(newMessage);
+
+    // Reset the form, and focus the subject:
     setSubject("");
     setMessage("");
     subjectRef.current?.focus();
 
+    // Add the message:
     statusReporter.setStatus(<>Adding message...</>);
-
-    await messagesClient.addMessage({
-      subject,
-      message,
-      user,
-    });
+    await messagesClient.addMessage(newMessage);
 
     statusReporter.clearStatus();
 
@@ -118,28 +151,39 @@ const AddMessage = ({ onMessageAdded }) => {
       </form>
     </Paper>
   );
-};
+}
 
 /**
- * If the server isn't reachable, let's allow a mock adapter to be used.
- * @param err
- * @param onMockEnabled
- * @constructor
+ * If the server isn't reachable, show an error, and allow a mock adapter to be used.
  */
-const ServerError = ({ err, onMockEnabled }) => {
-  const handleEnableMock = React.useCallback((ev) => {
+function ServerError({ err, onMockEnabled }: { err: Error; onMockEnabled: () => void }) {
+  function handleEnableMock(ev: React.MouseEvent) {
     ev.preventDefault();
 
     enableMockAdapter();
     onMockEnabled();
-  }, []);
+  }
 
   return (
     <>
-      <span className="text-red">Failed to load messages! {`${err}`}</span>{" "}
+      <span className="text-red mr-20">Failed to load messages! {`${err}`}</span>
       <a href="#" onClick={handleEnableMock} className="underline">
         Enable a mock server?
       </a>
     </>
   );
-};
+}
+
+/**
+ * Utility to inject the new message into the existing messages structure:
+ */
+function injectMessageIntoExistingMessages(result: MessagesByUserResponse, newMessage: AddMessagePayload) {
+  const { user, ...message } = newMessage;
+
+  // Inject the new message into the existing messages:
+  const userKey = user.toLowerCase();
+  if (!(userKey in result)) {
+    result[userKey] = [];
+  }
+  result[userKey].push(message);
+}

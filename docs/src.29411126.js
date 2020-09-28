@@ -25839,21 +25839,36 @@ Object.defineProperty(exports, "__esModule", {
 exports.messagesClient = exports.resetClient = void 0;
 
 var axios_1 = __importDefault(require("axios"));
+/**
+ * An Axios instance, tied to the base URL
+ */
+
 
 var messagesAPI = createClient();
 
 function createClient() {
   return axios_1.default.create({
-    baseURL: 'https://abraxvasbh.execute-api.us-east-2.amazonaws.com/proto'
+    baseURL: "https://abraxvasbh.execute-api.us-east-2.amazonaws.com/proto"
   });
 }
+/**
+ * Resets the client; this is only necessary when the mock adapter is enabled
+ */
+
 
 function resetClient() {
   messagesAPI = createClient();
 }
 
 exports.resetClient = resetClient;
+/**
+ * A wrapper around the Messages REST API
+ */
+
 exports.messagesClient = {
+  /**
+   * Retrieves all messages, grouped by user
+   */
   getAllMessages: function getAllMessages() {
     return __awaiter(this, void 0, void 0, function () {
       var response, messagesByUser;
@@ -25862,7 +25877,7 @@ exports.messagesClient = {
           case 0:
             return [4
             /*yield*/
-            , messagesAPI.get('/messages')];
+            , messagesAPI.get("/messages")];
 
           case 1:
             response = _a.sent();
@@ -25874,6 +25889,11 @@ exports.messagesClient = {
       });
     });
   },
+
+  /**
+   * Retrieves all messages for the given user
+   * @param user: The name of the user to retrieve
+   */
   getUserMessages: function getUserMessages(user) {
     return __awaiter(this, void 0, void 0, function () {
       var response, messagesResponse;
@@ -25894,6 +25914,11 @@ exports.messagesClient = {
       });
     });
   },
+
+  /**
+   * Adds a new message for the given user
+   * @param newMessage - The new message to add
+   */
   addMessage: function addMessage(newMessage) {
     return __awaiter(this, void 0, void 0, function () {
       var response;
@@ -25902,8 +25927,8 @@ exports.messagesClient = {
           case 0:
             return [4
             /*yield*/
-            , messagesAPI.post('/messages', __assign(__assign({}, newMessage), {
-              operation: 'add_message'
+            , messagesAPI.post("/messages", __assign(__assign({}, newMessage), {
+              operation: "add_message"
             }))];
 
           case 1:
@@ -25930,39 +25955,43 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.useStatusReporter = exports.StatusReporterProvider = void 0;
 
-var react_1 = __importDefault(require("react")); // @ts-ignore
+var react_1 = __importDefault(require("react"));
+/**
+ * This context holds the StatusReporter API.
+ * Don't use this context directly; use the StatusReporterProvider and the useStatusReporter hook instead.
+ */
 
 
 var StatusReporterContext = react_1.default.createContext(null);
-
-exports.StatusReporterProvider = function (_a) {
-  var children = _a.children;
-  var statusAPI = useCreateStatusReporter();
-  return react_1.default.createElement(StatusReporterContext.Provider, {
-    value: statusAPI
-  }, children);
-};
-
-function useCreateStatusReporter() {
-  var _a = react_1.default.useState(null),
-      status = _a[0],
-      setStatus = _a[1];
-
-  var statusReporter = react_1.default.useMemo(function () {
-    return {
-      status: status,
-      setStatus: setStatus,
-      clearStatus: function clearStatus() {
-        setStatus(null);
-      }
-    };
-  }, [status]);
-  return statusReporter;
-}
 /**
- * Retrieves the StatusReporter
+ * Creates and provides the StatusReporter API
+ *
+ * The StatusReporter is used to show a status, or an error, in the header.
  */
 
+function StatusReporterProvider(_a) {
+  var children = _a.children;
+
+  var _b = react_1.default.useState(null),
+      status = _b[0],
+      setStatus = _b[1];
+
+  var statusReporter = {
+    status: status,
+    setStatus: setStatus,
+    clearStatus: function clearStatus() {
+      setStatus(null);
+    }
+  };
+  return react_1.default.createElement(StatusReporterContext.Provider, {
+    value: statusReporter
+  }, children);
+}
+
+exports.StatusReporterProvider = StatusReporterProvider;
+/**
+ * Retrieves the StatusReporter API
+ */
 
 function useStatusReporter() {
   return react_1.default.useContext(StatusReporterContext);
@@ -26593,6 +26622,11 @@ var axios_1 = __importDefault(require("axios"));
 var axios_mock_adapter_1 = __importDefault(require("axios-mock-adapter"));
 
 var messagesClient_1 = require("~/common/messagesClient");
+/**
+ * Enables a mock server for all API calls through axios.
+ * @param delayResponse - Simulates a delayed response
+ */
+
 
 function enableMockAdapter(_a) {
   var _b = (_a === void 0 ? {} : _a).delayResponse,
@@ -26603,14 +26637,14 @@ function enableMockAdapter(_a) {
   });
   messagesClient_1.resetClient();
   var mockMessagesByUser = {
-    "scott": [{
+    scott: [{
       subject: "I love mocks",
       message: "I love mocks.  This is a mock message.  Mocks mocks mocks."
     }, {
       subject: "I love socks",
       message: "I love socks.  I'm wearing socks.  Socks socks socks."
     }],
-    "jim": [{
+    jim: [{
       subject: "Question: what kind of bear is best?",
       message: "Black bear."
     }, {
@@ -26820,6 +26854,19 @@ var __generator = this && this.__generator || function (thisArg, body) {
   }
 };
 
+var __rest = this && this.__rest || function (s, e) {
+  var t = {};
+
+  for (var p in s) {
+    if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
+  }
+
+  if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
+  }
+  return t;
+};
+
 var __importDefault = this && this.__importDefault || function (mod) {
   return mod && mod.__esModule ? mod : {
     "default": mod
@@ -26850,11 +26897,18 @@ var messagesClient_1 = require("~/common/messagesClient");
 var StatusReporter_1 = require("~/components/StatusReporter");
 
 var messagesClient_mock_1 = require("~/common/messagesClient.mock");
+/**
+ * Displays a list of messages, along with a Add Messages section
+ */
 
-exports.MessagesList = function () {
-  var statusReporter = StatusReporter_1.useStatusReporter();
+
+function MessagesList() {
+  var _this = this;
+
+  var statusReporter = StatusReporter_1.useStatusReporter(); // Retrieve all messages:
+
   var messages = react_async_hook_1.useAsync(function () {
-    return __awaiter(void 0, void 0, void 0, function () {
+    return __awaiter(_this, void 0, void 0, function () {
       var messages_1, err_1;
       return __generator(this, function (_a) {
         switch (_a.label) {
@@ -26874,7 +26928,8 @@ exports.MessagesList = function () {
             , messages_1];
 
           case 2:
-            err_1 = _a.sent();
+            err_1 = _a.sent(); // Show the error; if the mock is enabled, refresh:
+
             statusReporter.setStatus(react_1.default.createElement(ServerError, {
               err: err_1,
               onMockEnabled: function onMockEnabled() {
@@ -26899,8 +26954,9 @@ exports.MessagesList = function () {
     }
   });
   var users = messages.result ? Object.keys(messages.result) : [];
-  return react_1.default.createElement("div", null, !messages.loading && users.length === 0 && react_1.default.createElement("div", null, "No messages to display"), users.map(function (user) {
-    var msgs = messages.result[user];
+  var usersList = react_1.default.createElement(react_1.default.Fragment, null, !messages.loading && users.length === 0 && react_1.default.createElement("div", null, " No messages to display "), users.map(function (user) {
+    var msgs = messages.result[user]; // Render the User with all messages:
+
     return react_1.default.createElement(Paper_1.default, {
       key: user,
       elevation: 5,
@@ -26916,13 +26972,35 @@ exports.MessagesList = function () {
         variant: "h5"
       }, " ", msg.subject, " "), react_1.default.createElement(Typography_1.default, null, " ", msg.message, " "));
     }));
-  }), react_1.default.createElement(AddMessage, {
-    onMessageAdded: messages.execute
   }));
-};
 
-var AddMessage = function AddMessage(_a) {
-  var onMessageAdded = _a.onMessageAdded;
+  function handleMessageAdding(newMessage) {
+    // Proactively add the user to the UI:
+    if (messages.result) {
+      injectMessageIntoExistingMessages(messages.result, newMessage); // Note, this will get overridden anyway after we refresh the list
+    }
+  }
+
+  function handleMessageAdded() {
+    messages.execute();
+  }
+
+  return react_1.default.createElement("div", null, usersList, react_1.default.createElement(AddMessage, {
+    onMessageAdding: handleMessageAdding,
+    onMessageAdded: handleMessageAdded
+  }));
+}
+
+exports.MessagesList = MessagesList;
+/**
+ * Renders a "add message" form
+ */
+
+function AddMessage(_a) {
+  var _this = this;
+
+  var onMessageAdding = _a.onMessageAdding,
+      onMessageAdded = _a.onMessageAdded;
 
   var _b = react_1.default.useState(""),
       user = _b[0],
@@ -26939,23 +27017,29 @@ var AddMessage = function AddMessage(_a) {
   var subjectRef = react_1.default.useRef(null);
   var statusReporter = StatusReporter_1.useStatusReporter();
   var messageAdd = react_async_hook_1.useAsyncCallback(function () {
-    return __awaiter(void 0, void 0, void 0, function () {
+    return __awaiter(_this, void 0, void 0, function () {
+      var newMessage;
+
       var _a;
 
       return __generator(this, function (_b) {
         switch (_b.label) {
           case 0:
-            setSubject("");
-            setMessage("");
-            (_a = subjectRef.current) === null || _a === void 0 ? void 0 : _a.focus();
-            statusReporter.setStatus(react_1.default.createElement(react_1.default.Fragment, null, "Adding message..."));
-            return [4
-            /*yield*/
-            , messagesClient_1.messagesClient.addMessage({
+            newMessage = {
               subject: subject,
               message: message,
               user: user
-            })];
+            };
+            onMessageAdding(newMessage); // Reset the form, and focus the subject:
+
+            setSubject("");
+            setMessage("");
+            (_a = subjectRef.current) === null || _a === void 0 ? void 0 : _a.focus(); // Add the message:
+
+            statusReporter.setStatus(react_1.default.createElement(react_1.default.Fragment, null, "Adding message..."));
+            return [4
+            /*yield*/
+            , messagesClient_1.messagesClient.addMessage(newMessage)];
 
           case 1:
             _b.sent();
@@ -27010,31 +27094,48 @@ var AddMessage = function AddMessage(_a) {
     color: "primary",
     variant: "contained"
   }, "Add ", messageAdd.loading && "...")));
-};
+}
 /**
- * If the server isn't reachable, let's allow a mock adapter to be used.
- * @param err
- * @param onMockEnabled
- * @constructor
+ * If the server isn't reachable, show an error, and allow a mock adapter to be used.
  */
 
 
-var ServerError = function ServerError(_a) {
+function ServerError(_a) {
   var err = _a.err,
       onMockEnabled = _a.onMockEnabled;
-  var handleEnableMock = react_1.default.useCallback(function (ev) {
+
+  function handleEnableMock(ev) {
     ev.preventDefault();
     messagesClient_mock_1.enableMockAdapter();
     onMockEnabled();
-  }, []);
+  }
+
   return react_1.default.createElement(react_1.default.Fragment, null, react_1.default.createElement("span", {
-    className: "text-red"
-  }, "Failed to load messages! ", "" + err), " ", " ", react_1.default.createElement("a", {
+    className: "text-red mr-20"
+  }, "Failed to load messages! ", "" + err), react_1.default.createElement("a", {
     href: "#",
     onClick: handleEnableMock,
     className: "underline"
   }, "Enable a mock server?"));
-};
+}
+/**
+ * Utility to inject the new message into the existing messages structure:
+ */
+
+
+function injectMessageIntoExistingMessages(result, newMessage) {
+  var user = newMessage.user,
+      message = __rest(newMessage, ["user"]); // Inject the new message into the existing messages:
+
+
+  var userKey = user.toLowerCase();
+
+  if (!(userKey in result)) {
+    result[userKey] = [];
+  }
+
+  result[userKey].push(message);
+}
 },{"react":"n8MK","react-async-hook":"B8X3","@material-ui/core/Button":"uzLy","@material-ui/core/Paper":"mtQp","@material-ui/core/utils/capitalize":"AfXI","@material-ui/core/TextField":"JZs9","@material-ui/core/Typography":"pi2F","~/common/messagesClient":"JpP1","~/components/StatusReporter":"jmcH","~/common/messagesClient.mock":"B8nG"}],"XUuQ":[function(require,module,exports) {
 "use strict";
 
@@ -27533,21 +27634,27 @@ var CircularProgress_1 = __importDefault(require("@material-ui/core/CircularProg
 var Typography_1 = __importDefault(require("@material-ui/core/Typography"));
 
 var StatusReporter_1 = require("~/components/StatusReporter");
+/**
+ * A simple app Header bar, which also shows the Status from StatusReporter
+ */
 
-exports.Header = function () {
+
+function Header() {
   var statusReporter = StatusReporter_1.useStatusReporter();
   return react_1.default.createElement(AppBar_1.default, {
     position: "sticky",
     variant: "elevation",
-    className: "p-10 px-20"
+    className: "p-10 px-40"
   }, react_1.default.createElement(Typography_1.default, null, react_1.default.createElement("span", null, " Rippey's Message App "), statusReporter.status && react_1.default.createElement("span", {
     className: "ml-20"
   }, react_1.default.createElement(CircularProgress_1.default, {
     size: 16,
     color: "inherit",
-    className: "inline-block"
-  }), " ", statusReporter.status)));
-};
+    className: "inline-block mr-10"
+  }), react_1.default.createElement("span", null, " ", statusReporter.status, " "))));
+}
+
+exports.Header = Header;
 },{"react":"n8MK","@material-ui/core/AppBar":"vztC","@material-ui/core/CircularProgress":"mb4G","@material-ui/core/Typography":"pi2F","~/components/StatusReporter":"jmcH"}],"HF8J":[function(require,module,exports) {
 "use strict";
 
@@ -27569,21 +27676,26 @@ var MessagesList_1 = require("~/components/MessagesList");
 var StatusReporter_1 = require("~/components/StatusReporter");
 
 var Header_1 = require("~/components/Header");
+/**
+ * The Home page, including header and messages list
+ */
 
-exports.Home = function () {
+
+function Home() {
   return react_1.default.createElement(StatusReporter_1.StatusReporterProvider, null, react_1.default.createElement(Header_1.Header, null), react_1.default.createElement(Content, null, react_1.default.createElement(MessagesList_1.MessagesList, null)));
-};
+}
+
+exports.Home = Home;
 /**
  * Just a wrapper that includes the content padding
  */
 
-
-var Content = function Content(_a) {
+function Content(_a) {
   var children = _a.children;
   return react_1.default.createElement("section", {
     className: "px-20 lg:px-40 py-20"
   }, children);
-};
+}
 },{"react":"n8MK","~/components/MessagesList":"pXHl","~/components/StatusReporter":"jmcH","~/components/Header":"tmV9"}],"zo2T":[function(require,module,exports) {
 "use strict";
 
@@ -27605,6 +27717,6 @@ var react_dom_1 = __importDefault(require("react-dom"));
 
 var Home_1 = require("~/components/pages/Home");
 
-react_dom_1.default.render(react_1.default.createElement(Home_1.Home, null), document.getElementById('app-root'));
+react_dom_1.default.render(react_1.default.createElement(Home_1.Home, null), document.getElementById("app-root"));
 },{"regenerator-runtime/runtime":"QVnC","react":"n8MK","react-dom":"NKHc","~/components/pages/Home":"HF8J"}]},{},["zo2T"], null)
-//# sourceMappingURL=src.ca6d9f95.js.map
+//# sourceMappingURL=src.29411126.js.map
