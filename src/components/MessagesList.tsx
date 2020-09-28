@@ -11,8 +11,12 @@ import { messagesClient } from "~/common/messagesClient";
 import { useStatusReporter } from "~/components/StatusReporter";
 import { enableMockAdapter } from "~/common/messagesClient.mock";
 
-export const MessagesList = () => {
+/**
+ * Displays a list of messages, along with a Add Messages section
+ */
+export function MessagesList() {
   const statusReporter = useStatusReporter();
+  // Retrieve all messages:
   const messages = useAsync(
     async () => {
       try {
@@ -22,6 +26,7 @@ export const MessagesList = () => {
 
         return messages;
       } catch (err) {
+        // Show the error; if the mock is enabled, refresh:
         statusReporter.setStatus(<ServerError err={err} onMockEnabled={() => messages.execute()} />);
         throw err;
       }
@@ -35,11 +40,12 @@ export const MessagesList = () => {
 
   const users = messages.result ? Object.keys(messages.result) : [];
 
-  return (
-    <div>
-      {!messages.loading && users.length === 0 && <div>No messages to display</div>}
+  const usersList = (
+    <>
+      {!messages.loading && users.length === 0 && <div> No messages to display </div>}
       {users.map((user) => {
         const msgs = messages.result![user];
+        // Render the User with all messages:
         return (
           <Paper key={user} elevation={5} className="p-20 mb-20">
             <Typography variant="h4" className="text-blue">
@@ -55,13 +61,21 @@ export const MessagesList = () => {
           </Paper>
         );
       })}
+    </>
+  );
 
+  return (
+    <div>
+      {usersList}
       <AddMessage onMessageAdded={messages.execute} />
     </div>
   );
-};
+}
 
-const AddMessage = ({ onMessageAdded }) => {
+/**
+ * Renders a "add message" form
+ */
+function AddMessage({ onMessageAdded }: { onMessageAdded: () => void }) {
   const [user, setUser] = React.useState("");
   const [subject, setSubject] = React.useState("");
   const [message, setMessage] = React.useState("");
@@ -70,12 +84,13 @@ const AddMessage = ({ onMessageAdded }) => {
   const statusReporter = useStatusReporter();
 
   const messageAdd = useAsyncCallback(async () => {
+    // Reset the form, and focus the subject:
     setSubject("");
     setMessage("");
     subjectRef.current?.focus();
 
+    // Add the message:
     statusReporter.setStatus(<>Adding message...</>);
-
     await messagesClient.addMessage({
       subject,
       message,
@@ -118,21 +133,18 @@ const AddMessage = ({ onMessageAdded }) => {
       </form>
     </Paper>
   );
-};
+}
 
 /**
- * If the server isn't reachable, let's allow a mock adapter to be used.
- * @param err
- * @param onMockEnabled
- * @constructor
+ * If the server isn't reachable, show an error, and allow a mock adapter to be used.
  */
-const ServerError = ({ err, onMockEnabled }) => {
-  const handleEnableMock = (ev) => {
+function ServerError({ err, onMockEnabled }: { err: Error; onMockEnabled: () => void }) {
+  function handleEnableMock(ev: React.MouseEvent) {
     ev.preventDefault();
 
     enableMockAdapter();
     onMockEnabled();
-  };
+  }
 
   return (
     <>
@@ -142,4 +154,4 @@ const ServerError = ({ err, onMockEnabled }) => {
       </a>
     </>
   );
-};
+}

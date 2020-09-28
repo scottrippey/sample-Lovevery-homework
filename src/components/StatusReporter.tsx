@@ -1,14 +1,17 @@
 import React from "react";
 
-// @ts-ignore
-const StatusReporterContext = React.createContext<StatusReporter>(null);
+/**
+ * This context holds the StatusReporter API.
+ * Don't use this context directly; use the StatusReporterProvider and the useStatusReporter hook instead.
+ */
+const StatusReporterContext = React.createContext<StatusReporter>(null as any);
 
 /**
  * Creates and provides the StatusReporter API
  *
- * The StatusReporter is used to show a status, or error, in the header.
+ * The StatusReporter is used to show a status, or an error, in the header.
  */
-export function StatusReporterProvider({ children }) {
+export function StatusReporterProvider({ children }: React.PropsWithChildren<{}>) {
   const [status, setStatus] = React.useState<JSX.Element | null>(null);
   const statusReporter: StatusReporter = {
     status,
