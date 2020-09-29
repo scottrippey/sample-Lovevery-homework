@@ -6,6 +6,8 @@ import Paper from "@material-ui/core/Paper";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 
+import css from "./messages.scss";
+
 export interface AddMessageProps {
   onMessageAdding: (newMessage: AddMessagePayload) => void;
   onMessageAdded: () => void;
@@ -45,7 +47,7 @@ export function AddMessage({ onMessageAdding, onMessageAdded }: AddMessageProps)
   });
 
   return (
-    <Paper elevation={5} className="p-20">
+    <Paper elevation={5} className={css.messageWrapper}>
       <form onSubmit={(e) => e.preventDefault()}>
         <TextField label="User" value={user} onChange={(e) => setUser(e.target.value)} fullWidth margin="normal" />
         <TextField

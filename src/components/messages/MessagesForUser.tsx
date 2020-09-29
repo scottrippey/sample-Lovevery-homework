@@ -4,6 +4,7 @@ import capitalize from "@material-ui/core/utils/capitalize";
 import Skeleton from "@material-ui/lab/Skeleton";
 import React from "react";
 import { Message } from "~/common/messagesClient";
+import css from "./messages.scss";
 
 interface MessagesForUserProps {
   user: string;
@@ -15,8 +16,8 @@ interface MessagesForUserProps {
  */
 export function MessagesForUser({ user, messages }: MessagesForUserProps) {
   return (
-    <Paper elevation={5} className="p-20 mb-20">
-      <Typography variant="h4" className="text-blue">
+    <Paper elevation={5} className={css.messageWrapper}>
+      <Typography variant="h4" className={css.messageHeader}>
         {" "}
         {capitalize(user)}{" "}
       </Typography>
@@ -32,8 +33,8 @@ export function MessagesForUser({ user, messages }: MessagesForUserProps) {
  */
 export function MessagesForUserSkeleton() {
   return (
-    <Paper elevation={5} className="p-20 mb-20">
-      <Typography variant="h4" className="text-blue">
+    <Paper elevation={5} className={css.messageWrapper}>
+      <Typography variant="h4" className={css.messageHeader}>
         {" "}
         <Skeleton />
       </Typography>
@@ -51,7 +52,7 @@ interface MessageProps {
  */
 function Message({ message }: MessageProps) {
   return (
-    <div className="mt-10">
+    <div className={css.messageEntry}>
       <Typography variant="h5"> {message.subject} </Typography>
       <Typography> {message.message} </Typography>
     </div>
@@ -60,7 +61,7 @@ function Message({ message }: MessageProps) {
 
 function MessageSkeleton() {
   return (
-    <div className="mt-10">
+    <div className={css.messageEntry}>
       <Typography variant="h5">
         <Skeleton />
       </Typography>

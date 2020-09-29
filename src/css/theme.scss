@@ -1,0 +1,15 @@
+// Name our colors, but keep them private:
+$-blue-50: hsl(210, 100%, 50%);
+$-red-80: hsl(10, 100%, 80%);
+$-yellow-60: hsl(50, 100%, 60%);
+
+$-white: hsl(0, 0%, 100%);
+$-gray-80: hsl(0, 0%, 80%);
+$-gray-20: hsl(0, 0%, 20%);
+$-black: hsl(0, 0%, 0%);
+
+// Export our "theme" variables:
+$background: $-white;
+$text: $-black;
+$title: $-blue-50;
+$error: $-red-80;

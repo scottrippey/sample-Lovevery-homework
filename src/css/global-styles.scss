@@ -1,0 +1,23 @@
+@use "./theme";
+
+@import "../../node_modules/normalize-scss/sass/normalize/import-now";
+
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+:root {
+  font-family: "Roboto", sans-serif;
+}
+
+:root {
+  background: theme.$background;
+  color: theme.$text;
+}
+
+svg {
+  fill: currentColor;
+  display: inline-block;
+}
+
+* {
+  transition-duration: 250ms;
+  transition-timing-function: ease-out;
+}

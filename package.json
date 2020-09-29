@@ -16,8 +16,8 @@
   "scripts": {
     "test": "jest",
     "dev": "parcel src/index.html",
-    "build": "rm -rf docs && NODE_ENV=production parcel build src/index.html --no-minify --public-url ./ --out-dir docs",
-    "clean": "rm -rf docs .cache",
+    "build": "rm -rf docs && parcel build src/index.html --no-minify --public-url ./ --out-dir docs",
+    "clean": "rm -rf .cache docs dist",
     "lint": "prettier --check .",
     "lint:fix": "prettier --write ."
   },
@@ -35,23 +35,27 @@
     "@svgr/parcel-plugin-svgr": "^5.4.0",
     "@testing-library/react": "^11.0.4",
     "@types/jest": "^26.0.13",
+    "@types/react": "^16.9.48",
     "@types/react-dom": "^16.9.8",
+    "autoprefixer": "^9.8.6",
     "axios": "^0.20.0",
     "axios-mock-adapter": "^1.18.2",
     "classnames": "^2.2.6",
     "husky": "^4.3.0",
     "jest": "^26.4.2",
     "lint-staged": "^10.4.0",
+    "normalize-scss": "^7.0.1",
     "parcel-bundler": "^1.12.4",
-    "postcss-nesting": "^7.0.1",
+    "postcss": "^8.1.1",
+    "postcss-modules": "^3.2.2",
+    "postcss-scss": "^3.0.2",
     "prettier": "^2.1.2",
     "react-async-hook": "^3.6.1",
-    "tailwindcss": "^1.7.5",
+    "sass": "^1.26.11",
     "ts-jest": "^26.3.0",
     "typescript": "^4.0.2"
   },
   "dependencies": {
-    "@types/react": "^16.9.48",
     "react": "^16.13.1",
     "react-dom": "^16.13.1"
   }

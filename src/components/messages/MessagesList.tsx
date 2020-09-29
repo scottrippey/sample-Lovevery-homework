@@ -6,6 +6,7 @@ import { useStatusReporter } from "~/components/contexts/StatusReporter";
 import { enableMockAdapter } from "~/common/messagesClient.mock";
 import { MessagesForUser, MessagesForUserSkeleton } from "~/components/messages/MessagesForUser";
 import { AddMessage } from "~/components/messages/AddMessage";
+import css from "./messages.scss";
 
 /**
  * Displays a list of messages, along with a Add Messages section
@@ -38,7 +39,9 @@ export function MessagesList() {
 
   const usersList = (
     <>
-      {!messages.loading && users.length === 0 && <div className="my-10"> There are no messages to display. </div>}
+      {!messages.loading && users.length === 0 && (
+        <div className={css.messagesEmpty}> There are no messages to display. </div>
+      )}
       {messages.loading && users.length === 0 && <MessagesForUserSkeleton />}
       {users.map((user) => {
         const msgs = messages.result![user];
@@ -70,17 +73,15 @@ export function MessagesList() {
  * If the server isn't reachable, show an error, and allow a mock adapter to be used.
  */
 function ServerError({ err, onMockEnabled }: { err: Error; onMockEnabled: () => void }) {
-  function handleEnableMock(ev: React.MouseEvent) {
-    ev.preventDefault();
-
+  function handleEnableMock() {
     enableMockAdapter();
     onMockEnabled();
   }
 
   return (
     <>
-      <span className="text-red mr-20">Failed to load messages! {`${err}`}</span>
-      <a href="#" onClick={handleEnableMock} className="underline">
+      <span className={css.serverError}>Failed to load messages! {`${err}`}</span>
+      <a onClick={handleEnableMock} className={css.mockServerLink}>
         Enable a mock server?
       </a>
     </>
