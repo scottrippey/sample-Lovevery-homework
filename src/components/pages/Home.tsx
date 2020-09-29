@@ -1,7 +1,9 @@
 import React from "react";
-import { MessagesList } from "~/components/MessagesList";
-import { StatusReporterProvider } from "~/components/StatusReporter";
-import { Header } from "~/components/Header";
+import { MessagesList } from "~/components/messages/MessagesList";
+import { StatusReporterProvider } from "~/components/contexts/StatusReporter";
+import { Header } from "~/components/common/Header";
+
+import css from "./home.scss";
 
 /**
  * The Home page, including header and messages list
@@ -21,5 +23,5 @@ export function Home() {
  * Just a wrapper that includes the content padding
  */
 function Content({ children }: React.PropsWithChildren<{}>) {
-  return <section className="px-20 lg:px-40 py-20">{children}</section>;
+  return <section className={css.mainWrapper}>{children}</section>;
 }

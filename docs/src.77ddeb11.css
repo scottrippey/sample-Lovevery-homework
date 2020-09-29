@@ -1,0 +1,44 @@
+._messagesEmpty_e0f28 {
+  margin: 10px 0;
+}
+
+._mockServerLink_e0f28 {
+  color: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+._serverError_e0f28 {
+  color: #ffaa99;
+  margin-right: 20px;
+}
+
+._messageWrapper_e0f28 {
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+._messageHeader_e0f28 {
+  color: blue;
+}
+
+._messageEntry_e0f28 {
+  margin-top: 10px;
+}
+._appBar_79dcf {
+  padding: 10px 20px;
+}
+
+._statusMessage_79dcf {
+  margin-left: 20px;
+}
+
+._spinner_79dcf {
+  display: inline-block;
+  margin-right: 10px;
+}
+._mainWrapper_2c49c {
+  padding: 20px;
+}
+
+/*# sourceMappingURL=src.77ddeb11.css.map */
