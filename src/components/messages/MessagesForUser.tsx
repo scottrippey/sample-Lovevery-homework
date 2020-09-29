@@ -1,6 +1,7 @@
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import capitalize from "@material-ui/core/utils/capitalize";
+import Skeleton from "@material-ui/lab/Skeleton";
 import React from "react";
 import { Message } from "~/common/messagesClient";
 
@@ -26,6 +27,21 @@ export function MessagesForUser({ user, messages }: MessagesForUserProps) {
   );
 }
 
+/**
+ * Render a skeleton, used while loading messages
+ */
+export function MessagesForUserSkeleton() {
+  return (
+    <Paper elevation={5} className="p-20 mb-20">
+      <Typography variant="h4" className="text-blue">
+        {" "}
+        <Skeleton />
+      </Typography>
+      <MessageSkeleton />
+    </Paper>
+  );
+}
+
 interface MessageProps {
   message: Message;
 }
@@ -38,6 +54,19 @@ function Message({ message }: MessageProps) {
     <div className="mt-10">
       <Typography variant="h5"> {message.subject} </Typography>
       <Typography> {message.message} </Typography>
+    </div>
+  );
+}
+
+function MessageSkeleton() {
+  return (
+    <div className="mt-10">
+      <Typography variant="h5">
+        <Skeleton />
+      </Typography>
+      <Typography>
+        <Skeleton />
+      </Typography>
     </div>
   );
 }

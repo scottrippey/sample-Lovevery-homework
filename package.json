@@ -31,6 +31,7 @@
   },
   "devDependencies": {
     "@material-ui/core": "^4.11.0",
+    "@material-ui/lab": "^4.0.0-alpha.56",
     "@svgr/parcel-plugin-svgr": "^5.4.0",
     "@testing-library/react": "^11.0.4",
     "@types/jest": "^26.0.13",

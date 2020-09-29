@@ -4,7 +4,7 @@ import { useAsync } from "react-async-hook";
 import { AddMessagePayload, MessagesByUserResponse, messagesClient } from "~/common/messagesClient";
 import { useStatusReporter } from "~/components/contexts/StatusReporter";
 import { enableMockAdapter } from "~/common/messagesClient.mock";
-import { MessagesForUser } from "~/components/messages/MessagesForUser";
+import { MessagesForUser, MessagesForUserSkeleton } from "~/components/messages/MessagesForUser";
 import { AddMessage } from "~/components/messages/AddMessage";
 
 /**
@@ -38,7 +38,8 @@ export function MessagesList() {
 
   const usersList = (
     <>
-      {!messages.loading && users.length === 0 && <div> No messages to display </div>}
+      {!messages.loading && users.length === 0 && <div className="my-10"> There are no messages to display. </div>}
+      {messages.loading && users.length === 0 && <MessagesForUserSkeleton />}
       {users.map((user) => {
         const msgs = messages.result![user];
         return <MessagesForUser key={user} user={user} messages={msgs} />;
