@@ -15323,7 +15323,16 @@ Object.defineProperty(exports, "default", {
 var _Skeleton = _interopRequireDefault(require("./Skeleton"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-},{"./Skeleton":"N53O"}],"YnB8":[function(require,module,exports) {
+},{"./Skeleton":"N53O"}],"oRXS":[function(require,module,exports) {
+module.exports = {
+  "messagesEmpty": "_messagesEmpty_e0f28",
+  "mockServerLink": "_mockServerLink_e0f28",
+  "serverError": "_serverError_e0f28",
+  "messageWrapper": "_messageWrapper_e0f28",
+  "messageHeader": "_messageHeader_e0f28",
+  "messageEntry": "_messageEntry_e0f28"
+};
+},{}],"YnB8":[function(require,module,exports) {
 "use strict";
 
 var __importDefault = this && this.__importDefault || function (mod) {
@@ -15346,6 +15355,8 @@ var capitalize_1 = __importDefault(require("@material-ui/core/utils/capitalize")
 var Skeleton_1 = __importDefault(require("@material-ui/lab/Skeleton"));
 
 var react_1 = __importDefault(require("react"));
+
+var messages_scss_1 = __importDefault(require("./messages.scss"));
 /**
  * Renders the user name, and all messages
  */
@@ -15356,10 +15367,10 @@ function MessagesForUser(_a) {
       messages = _a.messages;
   return react_1.default.createElement(Paper_1.default, {
     elevation: 5,
-    className: "p-20 mb-20"
+    className: messages_scss_1.default.messageWrapper
   }, react_1.default.createElement(Typography_1.default, {
     variant: "h4",
-    className: "text-blue"
+    className: messages_scss_1.default.messageHeader
   }, " ", capitalize_1.default(user), " "), messages.map(function (msg, msgIndex) {
     return react_1.default.createElement(Message, {
       key: msgIndex,
@@ -15376,10 +15387,10 @@ exports.MessagesForUser = MessagesForUser;
 function MessagesForUserSkeleton() {
   return react_1.default.createElement(Paper_1.default, {
     elevation: 5,
-    className: "p-20 mb-20"
+    className: messages_scss_1.default.messageWrapper
   }, react_1.default.createElement(Typography_1.default, {
     variant: "h4",
-    className: "text-blue"
+    className: messages_scss_1.default.messageHeader
   }, " ", react_1.default.createElement(Skeleton_1.default, null)), react_1.default.createElement(MessageSkeleton, null));
 }
 
@@ -15391,7 +15402,7 @@ exports.MessagesForUserSkeleton = MessagesForUserSkeleton;
 function Message(_a) {
   var message = _a.message;
   return react_1.default.createElement("div", {
-    className: "mt-10"
+    className: messages_scss_1.default.messageEntry
   }, react_1.default.createElement(Typography_1.default, {
     variant: "h5"
   }, " ", message.subject, " "), react_1.default.createElement(Typography_1.default, null, " ", message.message, " "));
@@ -15399,12 +15410,12 @@ function Message(_a) {
 
 function MessageSkeleton() {
   return react_1.default.createElement("div", {
-    className: "mt-10"
+    className: messages_scss_1.default.messageEntry
   }, react_1.default.createElement(Typography_1.default, {
     variant: "h5"
   }, react_1.default.createElement(Skeleton_1.default, null)), react_1.default.createElement(Typography_1.default, null, react_1.default.createElement(Skeleton_1.default, null)));
 }
-},{"@material-ui/core/Paper":"mtQp","@material-ui/core/Typography":"pi2F","@material-ui/core/utils/capitalize":"AfXI","@material-ui/lab/Skeleton":"Cn84","react":"n8MK"}],"xTaA":[function(require,module,exports) {
+},{"@material-ui/core/Paper":"mtQp","@material-ui/core/Typography":"pi2F","@material-ui/core/utils/capitalize":"AfXI","@material-ui/lab/Skeleton":"Cn84","react":"n8MK","./messages.scss":"oRXS"}],"xTaA":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -27666,6 +27677,8 @@ var Paper_1 = __importDefault(require("@material-ui/core/Paper"));
 var TextField_1 = __importDefault(require("@material-ui/core/TextField"));
 
 var Button_1 = __importDefault(require("@material-ui/core/Button"));
+
+var messages_scss_1 = __importDefault(require("./messages.scss"));
 /**
  * Renders a "add message" form
  */
@@ -27730,7 +27743,7 @@ function AddMessage(_a) {
   });
   return react_1.default.createElement(Paper_1.default, {
     elevation: 5,
-    className: "p-20"
+    className: messages_scss_1.default.messageWrapper
   }, react_1.default.createElement("form", {
     onSubmit: function onSubmit(e) {
       return e.preventDefault();
@@ -27772,7 +27785,7 @@ function AddMessage(_a) {
 }
 
 exports.AddMessage = AddMessage;
-},{"~/common/messagesClient":"JpP1","react":"n8MK","~/components/contexts/StatusReporter":"uv23","react-async-hook":"B8X3","@material-ui/core/Paper":"mtQp","@material-ui/core/TextField":"JZs9","@material-ui/core/Button":"uzLy"}],"ixyG":[function(require,module,exports) {
+},{"~/common/messagesClient":"JpP1","react":"n8MK","~/components/contexts/StatusReporter":"uv23","react-async-hook":"B8X3","@material-ui/core/Paper":"mtQp","@material-ui/core/TextField":"JZs9","@material-ui/core/Button":"uzLy","./messages.scss":"oRXS"}],"ixyG":[function(require,module,exports) {
 "use strict";
 
 var __assign = this && this.__assign || function () {
@@ -27971,6 +27984,8 @@ var messagesClient_mock_1 = require("~/common/messagesClient.mock");
 var MessagesForUser_1 = require("~/components/messages/MessagesForUser");
 
 var AddMessage_1 = require("~/components/messages/AddMessage");
+
+var messages_scss_1 = __importDefault(require("./messages.scss"));
 /**
  * Displays a list of messages, along with a Add Messages section
  */
@@ -28029,7 +28044,7 @@ function MessagesList() {
   });
   var users = messages.result ? Object.keys(messages.result) : [];
   var usersList = react_1.default.createElement(react_1.default.Fragment, null, !messages.loading && users.length === 0 && react_1.default.createElement("div", {
-    className: "my-10"
+    className: messages_scss_1.default.messagesEmpty
   }, " There are no messages to display. "), messages.loading && users.length === 0 && react_1.default.createElement(MessagesForUser_1.MessagesForUserSkeleton, null), users.map(function (user) {
     var msgs = messages.result[user];
     return react_1.default.createElement(MessagesForUser_1.MessagesForUser, {
@@ -28065,18 +28080,16 @@ function ServerError(_a) {
   var err = _a.err,
       onMockEnabled = _a.onMockEnabled;
 
-  function handleEnableMock(ev) {
-    ev.preventDefault();
+  function handleEnableMock() {
     messagesClient_mock_1.enableMockAdapter();
     onMockEnabled();
   }
 
   return react_1.default.createElement(react_1.default.Fragment, null, react_1.default.createElement("span", {
-    className: "text-red mr-20"
+    className: messages_scss_1.default.serverError
   }, "Failed to load messages! ", "" + err), react_1.default.createElement("a", {
-    href: "#",
     onClick: handleEnableMock,
-    className: "underline"
+    className: messages_scss_1.default.mockServerLink
   }, "Enable a mock server?"));
 }
 /**
@@ -28097,7 +28110,7 @@ function injectMessageIntoExistingMessages(result, newMessage) {
 
   result[userKey].push(message);
 }
-},{"react":"n8MK","react-async-hook":"B8X3","~/common/messagesClient":"JpP1","~/components/contexts/StatusReporter":"uv23","~/common/messagesClient.mock":"B8nG","~/components/messages/MessagesForUser":"YnB8","~/components/messages/AddMessage":"mpJN"}],"XUuQ":[function(require,module,exports) {
+},{"react":"n8MK","react-async-hook":"B8X3","~/common/messagesClient":"JpP1","~/components/contexts/StatusReporter":"uv23","~/common/messagesClient.mock":"B8nG","~/components/messages/MessagesForUser":"YnB8","~/components/messages/AddMessage":"mpJN","./messages.scss":"oRXS"}],"XUuQ":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28572,7 +28585,13 @@ Object.defineProperty(exports, "default", {
 var _CircularProgress = _interopRequireDefault(require("./CircularProgress"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-},{"./CircularProgress":"WFBt"}],"N2Nk":[function(require,module,exports) {
+},{"./CircularProgress":"WFBt"}],"ck9T":[function(require,module,exports) {
+module.exports = {
+  "appBar": "_appBar_79dcf",
+  "statusMessage": "_statusMessage_79dcf",
+  "spinner": "_spinner_79dcf"
+};
+},{}],"N2Nk":[function(require,module,exports) {
 "use strict";
 
 var __importDefault = this && this.__importDefault || function (mod) {
@@ -28595,6 +28614,8 @@ var CircularProgress_1 = __importDefault(require("@material-ui/core/CircularProg
 var Typography_1 = __importDefault(require("@material-ui/core/Typography"));
 
 var StatusReporter_1 = require("~/components/contexts/StatusReporter");
+
+var header_scss_1 = __importDefault(require("./header.scss"));
 /**
  * A simple app Header bar, which also shows the Status from StatusReporter
  */
@@ -28605,18 +28626,22 @@ function Header() {
   return react_1.default.createElement(AppBar_1.default, {
     position: "sticky",
     variant: "elevation",
-    className: "p-10 px-40"
+    className: header_scss_1.default.appBar
   }, react_1.default.createElement(Typography_1.default, null, react_1.default.createElement("span", null, " Rippey's Message App "), statusReporter.status && react_1.default.createElement("span", {
-    className: "ml-20"
+    className: header_scss_1.default.statusMessage
   }, react_1.default.createElement(CircularProgress_1.default, {
     size: 16,
     color: "inherit",
-    className: "inline-block mr-10"
+    className: header_scss_1.default.spinner
   }), react_1.default.createElement("span", null, " ", statusReporter.status, " "))));
 }
 
 exports.Header = Header;
-},{"react":"n8MK","@material-ui/core/AppBar":"vztC","@material-ui/core/CircularProgress":"mb4G","@material-ui/core/Typography":"pi2F","~/components/contexts/StatusReporter":"uv23"}],"HF8J":[function(require,module,exports) {
+},{"react":"n8MK","@material-ui/core/AppBar":"vztC","@material-ui/core/CircularProgress":"mb4G","@material-ui/core/Typography":"pi2F","~/components/contexts/StatusReporter":"uv23","./header.scss":"ck9T"}],"b7Et":[function(require,module,exports) {
+module.exports = {
+  "mainWrapper": "_mainWrapper_2c49c"
+};
+},{}],"HF8J":[function(require,module,exports) {
 "use strict";
 
 var __importDefault = this && this.__importDefault || function (mod) {
@@ -28637,6 +28662,8 @@ var MessagesList_1 = require("~/components/messages/MessagesList");
 var StatusReporter_1 = require("~/components/contexts/StatusReporter");
 
 var Header_1 = require("~/components/common/Header");
+
+var home_scss_1 = __importDefault(require("./home.scss"));
 /**
  * The Home page, including header and messages list
  */
@@ -28654,10 +28681,10 @@ exports.Home = Home;
 function Content(_a) {
   var children = _a.children;
   return react_1.default.createElement("section", {
-    className: "px-20 lg:px-40 py-20"
+    className: home_scss_1.default.mainWrapper
   }, children);
 }
-},{"react":"n8MK","~/components/messages/MessagesList":"ixyG","~/components/contexts/StatusReporter":"uv23","~/components/common/Header":"N2Nk"}],"zo2T":[function(require,module,exports) {
+},{"react":"n8MK","~/components/messages/MessagesList":"ixyG","~/components/contexts/StatusReporter":"uv23","~/components/common/Header":"N2Nk","./home.scss":"b7Et"}],"zo2T":[function(require,module,exports) {
 "use strict";
 
 var __importDefault = this && this.__importDefault || function (mod) {
@@ -28680,4 +28707,4 @@ var Home_1 = require("~/components/pages/Home");
 
 react_dom_1.default.render(react_1.default.createElement(Home_1.Home, null), document.getElementById("app-root"));
 },{"regenerator-runtime/runtime":"QVnC","react":"n8MK","react-dom":"NKHc","~/components/pages/Home":"HF8J"}]},{},["zo2T"], null)
-//# sourceMappingURL=src.4a41a7a7.js.map
+//# sourceMappingURL=src.c0d7ae1c.js.map
