@@ -1,7 +1,7 @@
 import React from "react";
-import { MessagesList } from "~/components/MessagesList";
-import { StatusReporterProvider } from "~/components/StatusReporter";
-import { Header } from "~/components/Header";
+import { MessagesList } from "~/components/messages/MessagesList";
+import { StatusReporterProvider } from "~/components/contexts/StatusReporter";
+import { Header } from "~/components/common/Header";
 
 /**
  * The Home page, including header and messages list

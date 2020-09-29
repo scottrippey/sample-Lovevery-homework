@@ -3,7 +3,7 @@ import { render } from "@testing-library/react";
 import { MessagesList } from "./MessagesList";
 
 import { enableMockAdapter } from "~/common/messagesClient.mock";
-import { StatusReporterProvider } from "~/components/StatusReporter";
+import { StatusReporterProvider } from "~/components/contexts/StatusReporter";
 
 enableMockAdapter({ delayResponse: 100 });
 
