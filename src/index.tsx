@@ -1,6 +1,8 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import "regenerator-runtime/runtime";
 
-import { Home } from '~/pages/Home';
+import React from "react";
+import ReactDOM from "react-dom";
 
-ReactDOM.render(<Home />, document.getElementById('app-root'));
+import { Home } from "~/components/pages/Home";
+
+ReactDOM.render(<Home />, document.getElementById("app-root"));

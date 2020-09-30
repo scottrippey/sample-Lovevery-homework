@@ -1,0 +1,29 @@
+@use "../../css/theme";
+
+.messagesEmpty {
+  margin: 10px 0;
+}
+
+.mockServerLink {
+  color: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.serverError {
+  color: theme.$error;
+  margin-right: 20px;
+}
+
+.messageWrapper {
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.messageHeader {
+  color: blue;
+}
+
+.messageEntry {
+  margin-top: 10px;
+}
